@@ -4,130 +4,1187 @@
 :root{--ink:#473629;--muted:#88745f;--bg:#fffaf0;--card:#fffdf8;--accent:#df8c43;--accent2:#ffecd1;--line:#edd7b8;--good:#317655;--bad:#a64545}*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);min-height:100vh;background:linear-gradient(90deg,#f4dcae55 50%,transparent 50%) 0 0/56px 56px,linear-gradient(#f4dcae55 50%,transparent 50%) 0 0/56px 56px,var(--bg)}main{width:min(740px,calc(100% - 30px));margin:40px auto 70px}.top{text-align:center;margin-bottom:22px}.bagels{font-size:64px;letter-spacing:12px;filter:drop-shadow(0 5px 2px #8c633029)}h1{font-size:clamp(35px,7vw,57px);margin:2px 0;color:#d98637;letter-spacing:2px}.subtitle{color:var(--muted);font-size:15px}.panel{background:var(--card);border:2px solid var(--line);border-radius:23px;padding:clamp(20px,4vw,38px);box-shadow:0 10px 32px #6b49191a}.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;margin:20px 0}button,select{font:inherit}button{cursor:pointer;border-radius:14px;border:2px solid var(--line);padding:13px 18px;background:white;color:var(--ink);font-weight:650;transition:transform .12s,background .12s}button:hover:not(:disabled){transform:translateY(-1px);background:#fff1dc}button:disabled{opacity:.55;cursor:default}.primary{background:var(--accent);color:white;border-color:var(--accent)}.primary:hover:not(:disabled){background:#c87530}select{border:2px solid var(--line);border-radius:12px;background:white;padding:12px 14px;color:var(--ink)}.hidden{display:none!important}.row{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--muted);font-size:14px;font-weight:650}.bar{height:10px;background:#f3e5d1;border-radius:99px;overflow:hidden;margin:12px 0 30px}.fill{height:100%;width:0;background:var(--accent);transition:width .25s}h2{font-size:clamp(20px,4vw,27px);line-height:1.36;margin:0 0 24px}.answers{display:grid;gap:11px}.answer{text-align:left;display:flex;align-items:center;gap:14px;width:100%;font-weight:520;line-height:1.35;padding:16px}.letter{display:grid;place-items:center;flex:0 0 32px;height:32px;border-radius:9px;background:#f8e5c8;color:#9b652f;font-weight:800}.answer.chosen{border-color:var(--accent);background:#fff0d9}.answer.correct{border-color:var(--good);background:#e5f4e9}.answer.wrong{border-color:var(--bad);background:#fbe9e7}.feedback{margin:18px 0 0;line-height:1.5;font-weight:600}.feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}.bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:28px}.small{color:var(--muted);font-size:13px}.score{font-size:52px;color:#ce7b2f;font-weight:800;text-align:center;margin:15px 0 5px}.center{text-align:center}.review{margin-top:22px;max-height:330px;overflow:auto;text-align:left}.review-item{padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}.review-item strong{display:block;margin-bottom:5px}footer{margin:25px auto;text-align:center;color:#8a735c;font-size:12px;max-width:650px;line-height:1.5}@media(max-width:500px){main{margin-top:20px}.bagels{font-size:48px}.panel{border-radius:18px}.bottom{flex-direction:column-reverse;align-items:stretch}.bottom button{width:100%}}
 </style></head><body><main><header class="top"><div class="bagels" aria-hidden="true">🥯🥯🥯</div><h1>Bagel Quiz!</h1><div class="subtitle">Anatomia • sprawdź, ile pamiętasz</div></header>
 <section class="panel" id="start"><h2 class="center">Gotowy na quiz?</h2><p class="center">Pytania na podstawie przesłanego notatnika z anatomii. Wybierz długość zestawu i rozpocznij.</p><div class="controls"><label for="count">Liczba pytań:</label><select id="count"><option value="10">10 pytań</option><option value="20">20 pytań</option><option value="all">Wszystkie pytania</option></select></div><div class="center"><button class="primary" id="startBtn">Rozpocznij quiz →</button></div></section>
-<section class="panel hidden" id="play" aria-live="polite"><div class="row"><span id="number"></span><span id="points"></span></div><div class="bar"><div id="fill" class="fill"></div></div><h2 id="question"></h2><div id="answers" class="answers"></div><div class="feedback hidden" id="feedback"></div><div class="bottom"><span class="small">Zaznacz jedną odpowiedź</span><button id="next" class="primary" disabled>Następne pytanie →</button></div></section>
+<section class="panel hidden" id="play" aria-live="polite"><div class="row"><span id="number"></span><span id="points"></span></div><div class="bar"><div id="fill" class="fill"></div></div><h2 id="question"></h2><div id="answers" class="answers"></div><div class="feedback hidden" id="feedback"></div><p id="sourceNote" class="small hidden"></p><div class="bottom"><span class="small">Zaznacz jedną odpowiedź</span><button id="next" class="primary" disabled>Następne pytanie →</button></div></section>
 <section class="panel hidden center" id="finish"><h2>Koniec quizu! 🎉</h2><div id="finalScore" class="score"></div><p id="summary"></p><div class="controls"><button class="primary" id="again">Zagraj ponownie</button><button id="reviewBtn">Pokaż błędy</button></div><div id="review" class="review hidden"></div></section>
 <script>
 const BANK = [
-{"q":"W sklad ukladu nerwowego ośrodkowego nie wchodzi","a":["nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy","podjęzykowy"],"correct":0},
-{"q":"Rdzeń kręgowy kończy się na wysokości kręgu","a":["Lędźwiowego 1,2","C8-L2","C1-C4","na wysokości C5-Th1"],"correct":0},
-{"q":"Klinicznie do pnia mózgu nie zaliczamy","a":["Kresomózgowia","Mozdzku","Rdzenia przedłužonego","Przyśrodkowej"],"correct":0},
-{"q":"Na powierzchni wypuklej półkul mózgu možemy wyróżnić platy w liczbie","a":["4","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Robak jest częscią","a":["Mozdzku","Kresomózgowia","Rdzenia przedłužonego","Przyśrodkowej"],"correct":0},
-{"q":"Do podwzgorza zaliczamy","a":["Wszystkie wymienione (Ciała suteczkowate, guz popielaty, skrzyzowanie wzrokowe, lejek)","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"W mózgowiu nie wyróžniamy komór","a":["Przyśrodkowej","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Wodociąg mozgu fączy komory","a":["Trzecią | czwarta","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Na powierzchni brzusznej mostu i rdzenia wychodzą nerwy","a":["V-XII","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Bruzda Srodkowa oddziela platy","a":["Czołowy od ciemieniowego","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Krew do mózgowia doprowadza","a":["Tętnica kręgowa i szyjna wewnętrzna","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Najbardziej zewnętrzną z opon mózgu jest","a":["Twarda","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Oliwka widoczna jest na powierzchni","a":["Rdzenia przedłužonego","Kresomózgowia","Mozdzku","Przyśrodkowej"],"correct":0},
-{"q":"Mięsień skośny górny jest unerwiony przez nerw","a":["Bloczkowy","nerwy rdzeniowe","przedsionkowo-ślimakowy","podjęzykowy"],"correct":0},
-{"q":"Prawidłowe działanie układy przywspółczulnego polega na","a":["skurczu mięśni oskrzeli","Lędźwiowego 1,2","C8-L2","C1-C4"],"correct":0},
-{"q":"Nerwem VIll jest nerw","a":["przedsionkowo-ślimakowy","nerwy rdzeniowe","Bloczkowy","podjęzykowy"],"correct":0},
-{"q":"Nerwem luków skrzelowych nie jest nerw","a":["podjęzykowy","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Nerw okoruchowy nie unerwia mięśnia","a":["prostego bocznego","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Nerw zębodolowy dolny jest galęzią nerwu","a":["Zuchwowego","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Przez otwór zyły szyjnej przechodzi nerw","a":["wszystkie wymienione (językowo gardlowy, blędny, dodatkowy)","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Uklad wspołczulny zlokalizowany jest w segmentach","a":["C8-L2","Lędźwiowego 1,2","C1-C4","na wysokości C5-Th1"],"correct":0},
-{"q":"Prawidłowe działanie układu współczulnego polega na","a":["Rozkurczu naczyn wiercowych","Lędźwiowego 1,2","C8-L2","C1-C4"],"correct":0},
-{"q":"Splot szyjny powstaje z galęzi","a":["C1-C4","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"W splocie ramiennym wyróżniamy pnie","a":["górny, Srodkowy, dolny","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Nerwem splotu ramiennego nie jest nerw","a":["Wszystkie wymienione są (mięśniowo- skośny, promieniowy, łokciowy, pachowy)","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Układ wewnątrzwydzielniczy tworzą gruczoły z wyjątkiem","a":["nerki","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Gruczol tarczowy przykryty jest mięśniami","a":["wszystkie wymienione (mostkowo tarczowym, lopatkowo gnykowym, mostkowo gnykowym)","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Gruczoły przytarczyczne występują przeważnie w liczbie","a":["4","nerki","watroba","przedniego i tylnego"],"correct":0},
-{"q":"Do przodu od prawego nadnercza znajduje się","a":["watroba","nerki","przedniego i tylnego","4"],"correct":0},
-{"q":"Przysadka składa się z płatów","a":["przedniego i tylnego","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Co to neuromer?","a":["segment rdzenia kręgowego z którego odchodzi JEDNA PARA nerwów rdzeniowych.","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Liczba nerwów czaszkowych?","a":["24 ,bo jest 12 par nerwów czaszkowych","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Jaki nerw ma włókna ruchowe?","a":["III,IV,trzecia gałąž n.V -n.Żuchwowy ,IV,VII,IX,X,XI,XII","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Co unerwia gałąż- struna bębenkowa ?","a":["drogą wydzielniczą unerwia- śliniankę podżuchwową i podjęzykową oraz błonę śluzową okolicy podjęzykowej i przednie cz. Języka, oraz Smakowo: błonę śluzową 2/3 przednich języka.","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Ogon koński co go tworzy?","a":["korzenie nerwów lędźwiowych, krzyżowych i guzicznych.","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Co unerwia odbytnice po obu stronach?","a":["splot podburzyszny dolny","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Pień nerwu rdzeniowego jakie oddaje gałęzie?","a":["gałąź brzuszna (przednia, gałąż grzbietowa(tylna), gałąż oponową, gałąź łączącą.","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"największy nerw splotu lędźwiowego?","a":["n. udowy","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Największy nerw ciała ludzkiego?","a":["nerw kulszowy (w splocie krzyżowym-jednocześnie największy splot ciała )","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Gdzie leżą ośrodki współczulne rdzenia kręgowego?","a":["w jądrze pośrednio -bocznym - w bocznym rogu rdzenia na C8-L2-L3","Lędźwiowego 1,2","C1-C4","na wysokości C5-Th1"],"correct":0},
-{"q":"n.skalisty większy jaki to nerw?","a":["to gałąż od n.VII twarzowego , razem ze struną bębenkową.","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"nn.międzyżebrowe czego nie unerwiają?","a":["nie unerwiają tylnej strony karku, głowy itd.","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"gdzie nie dochodzi n.błędny(x)?","a":["do odbytnicy","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","współczulne zazwojowe,czuciowe"],"correct":0},
-{"q":"Jakie włókna ma gałąź oponowa?","a":["współczulne zazwojowe,czuciowe","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Która gałąź n.trójdzielnego V prowadzi włókna ruchowe?","a":["V3-n. Żuchwowy","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Który nerw zaopatruje .prosty boczny gałki ocznej?","a":["n.odwodzące VI","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Jak leży splot ramienny?","a":["na wysokości C5-Th1","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Nerwy przechodzące przez otwór szyjny?","a":["n.IX,X,XI","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Który nerw oddaje strunę bębenkową?","a":["n.twarzowy VII","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Unerwienie ruchowe języka-odpowiada za to?","a":["nn.podjezykowe XII","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Co powoduje n.błędnyx?","a":["powoduje skurcz oskrzeli ,a podrażnienie n.błędnego X powoduje bradykardie.","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Co powoduje n.krtaniowy wsteczny i czym jest?","a":["jest to gałąź n. błędnego w odcinku szyjnym ,powoduje chrypkę .","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Które nerwy jako jedyne wychodzą z mózgowia na części grzbietowej?","a":["IV para czyli nerw bloczkowy.","nerwy rdzeniowe","przedsionkowo-ślimakowy","podjęzykowy"],"correct":0},
-{"q":"Jak biegnie droga nerwowa dośrodkowa i odśrodkowa?","a":["Dośrodkowa to z receptora do ośrodka- mózgu","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Które nerwy jako jedyne nie ulegają skrzyżowaniu?","a":["Nerwy węchowe I.","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Jaki jest najważniejszy nerw czuciowy twarzy?","a":["n. trójdzielny V ze wszystkimi swoimi gałęziami -n.ocznym,n.szczękowym i n. podżuchwowym","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Najwažniejszym nerwem ruchowym jest?","a":[".twarzowy(VII)- w otworze rylcowo sutkowym","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Jak jest unerwiony język?","a":["2/3 przednie języka unerwione przez strunę bębenkową (od .twarzowego VII) 1/3 tylna-nasada języka - przez gałęzie językowe które oddaje n.językowo-gardłowy Ix ruchowo język unerwiony przez -n.podjęzykowy XII","nerwy rdzeniowe","Bloczkowy","przedsionkowo-ślimakowy"],"correct":0},
-{"q":"Co należy do jader podstawnych/ podkorowych?","a":["jądro ogoniaste, ciało migdałowate, przedmurze,jądro soczewkowate(tworzą je gałka blada i skorupa)","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Wodociąg mózgu co łączy?","a":["Komore trzecią z komorą czwartą","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Co oddziela opone pajęczą-pajęczynówke od opony twardej?","a":["jamą podtwardówkowa znajduje się pomiędzy nimi","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Droga piramidowa -jaka to droga?","a":["droga przewodząca impulsy Swiadome(czucia Swiadomego)","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Oksytocyna- co powoduje?","a":["produkowana przez tylny płat przysadki, bierze udział w wydzielaniu mleka w czasie laktacji, wspomaga zapłodnienie komórki jajowej i stymuluje obkurczanie się macicy po porodzie.","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Co tworzy tyłomózgowie wtórne?","a":["rdzeń przedłużony, móżdżek, most","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":".Trójneuronowe drogi to..?","a":["droga czucie głębokiego, ,smakowa, droga czucia bólu i temp.","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Co produkuje płyn mózgowo-rdzeniowy?","a":["splot naczyniówkowy","Lędźwiowego 1,2","C8-L2","C1-C4"],"correct":0},
-{"q":"co jest ograniczone od tyłu i od tyłu móżdžkiem oraz od przodu i dołu powierzchnią grzbietową mostu i rdzenia przedłużonego?","a":["komora czwarta","Lędźwiowego 1,2","C8-L2","C1-C4"],"correct":0},
-{"q":"Grasica-bylo cos do zaznaczenia ?","a":["Grasica ulega inwolucji, szczyt rozwinięcia między 2 a 3 r.2 ma 37g ,hormony wydzielane przez nią regulują prace limfocytów T.","nerki","watroba","przedniego i tylnego"],"correct":0},
-{"q":"do czego należy oliwka oraz piramidy ?","a":["do powierzchni brzusznej rdzenia przedłuzonego","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"lle i jakich jest segmentów rdzenia kręgowego?","a":["C1-C8-( 8 szyjnych) Th1-Th12-(12 piersiowych) L1-L5- (5 lędźwiowych) S1-S5( 5 krzyżowych) CO-(1 guziczny)","Lędźwiowego 1,2","C8-L2","C1-C4"],"correct":0},
-{"q":"co tworzy pień mózgu?","a":["śródmózgowie, most, rdzeń przedłužony, móżdžek","Lędźwiowego 1,2","C8-L2","C1-C4"],"correct":0},
-{"q":"Jakie płaty przykrywają wyspe?","a":["czołowy, czołowo-ciemieniowe i skroniowe","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Co oddziela tęczówka?","a":["przednią komore oka, od tylnej komory oka","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"lle jest płynu mózgowo-rdzeniowego?","a":["135ml","Lędźwiowego 1,2","C8-L2","C1-C4"],"correct":0},
-{"q":"Gdzie leży tarczyca?","a":["przednio -dolna część szyi","nerki","watroba","przedniego i tylnego"],"correct":0},
-{"q":"Gdzie leży róg przedni komory bocznej?","a":["w płacie czołowym + róg tylny(płat potyliczny) + róg dolny (platy skroniowe)","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Co tworzy ciało prążkowane?","a":["jądro ogoniaste i jądro soczewkowate","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Co tworzy prąžkowie?","a":["skorupa i jądro ogoniaste","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Gdzie rozpoczynają się drogi przywspółczulne n. czaszkowych?","a":["W jądrach przywspółczulnych nerwów III,VII ,IX i X.","Lędźwiowego 1,2","C8-L2","C1-C4"],"correct":0},
-{"q":"Do której części ucha należy błona bębenkowa?","a":["ucho Srodkowe","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Hormony przedniego płata przysadki?","a":["folikulotropina hormon luteinizujący somatotropina prolaktyna kortykotropina tyreotropina melanotropina","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Co nie należy do wypustek opony twardej?:","a":["o przebiegu strzałkowym: sierp mózgu i sierp módżku o przebiegu poziomym:namiot móżdžku i przepona lub przegroda siodła tureckiego","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Skąd wychodzi opona twarda z mózgowia?","a":["z tylnego dołu czaszki ,dokładniej przez otwór wielki(potylica)","Kresomózgowia","Mozdzku","Rdzenia przedłužonego"],"correct":0},
-{"q":"Gdzie leżą jądra dróg współczulnych?","a":["w jądrach pośrednio-bocznych, w rogach bocznych rdzenia na C8-L2-L3","Lędźwiowego 1,2","C1-C4","na wysokości C5-Th1"],"correct":0},
-{"q":"Gdzie rozpoczynają się odSrodkowe drogi współczulne?","a":["w rogach bocznych rdzenia na C8- L2-L3","Lędźwiowego 1,2","C8-L2","C1-C4"],"correct":0},
-{"q":"Co wytwarzają przytarczyce?","a":["Parathormon, reguluje stężenie wapnia we krwii","nerki","watroba","przedniego i tylnego"],"correct":0},
-{"q":"Ucho środkowe tworzą?","a":["błona bębenkowa, jama bębenkowa,trąbka słuchowa","nerki","watroba","przedniego i tylnego"],"correct":0},
-{"q":"Położenie trzustki?","a":["po lewej stronie, do przodu od kręgosłupa, na L2-L3","nerki","watroba","przedniego i tylnego"],"correct":0},
-{"q":"Gruczoł tarczowy zbudowany jest z..?","a":["2 płatów bocznych : prawego i lewego i Węziny(jej niestełym elementem jest płat piramidowy)","skurczu mięśni oskrzeli","Rozkurczu naczyn wiercowych","do odbytnicy"],"correct":0},
-{"q":"Nerw I czaszkowy to nerw","a":["oczny","nosowy","wzrokowy","okoruchowy","węchowy"],"correct":4},
-{"q":"Rdzeń kręgowy kończy się na wysokości kręgu","a":["piersiowego XII","ledźwiowego I,II","lędźwiowego IV,V","szyjnego VII","zadna odp nie jest poprawna"],"correct":1},
-{"q":"Komórki przedzwojowe układu przywspółczulnego znajdują się w jądrach nerwów","a":["okoruchowego","twarzowego","Językowo-gardłowego blednego","e. wszystkie powyższe"],"correct":3},
-{"q":"W rdzeniu kręgowym wyróżniamy drogi","a":["a. własne rdzenia kręgowego","rdzeniowo-mózgowe","mózgowo-rdzeniowe","wszystkie powyższe","zadne z powyzszych"],"correct":3},
-{"q":"Drogi piramidowe należą do dróg","a":["własnych rdzenia kr.","rdzeniowo-mozgowych","mózgowo-rdzeniowych","rdzeniowo-opuszkowych","żadne z powyższych"],"correct":2},
-{"q":"Klinicznie do pnia mózgu nie zaliczamy","a":["mostu","śródmózgowia","rdzenia przedłuzonego","kresomózgowia","zadne z powyzszych"],"correct":3},
-{"q":"Na powierzchni wypukłej półkul mózgu możemy wyróżnić płaty w liczbie","a":["a. 2","4","d.5","e. 6"],"correct":1},
-{"q":"Oliwka widoczna jest na powierzchni","a":["a. rdzenia kr.","móżdzku","rdzenia przedłuzonego","pólkul mózgu","mostu"],"correct":2},
-{"q":"Prawidłowe działanie układu przywspółczulnego polega na","a":["skurczu miesni oskrzeli","Lędźwiowego 1,2","C8-L2","C1-C4"],"correct":0},
-{"q":"Nerw trójdzielny wychodzi z mózgowia","a":["a. nad piramida","w dole międzykolanowym","przed skrzyżowaniem wzrokowym","na wysokości oliwki","na granicy mostu i konara środkowego"],"correct":4},
-{"q":"W układzie przywspółczulnym nie wyróżniamy części","a":["a. głowowej","głowowej i krzyzowej","krzyżowej","szyjnej","śródściennej"],"correct":3},
-{"q":"Nerw dodatkowy wytwarza polączenie z nerwem","a":["przedsionkowo-ślimakowym","językowo-gardłowym","blednym","podjęzykowym","żadne z powyższych"],"correct":2},
-{"q":"Wodociag mózgu łączy komory","a":["boczne","4 i boczne","3 i boczne","314","e. żadne z powyższych"],"correct":3},
-{"q":"Na powierzchni brzusznej mostu i rdzenia wychodzą nerwy","a":["I-IV","III-VI","tylko XII",". V-XII","e. I-XII"],"correct":3},
-{"q":"Nerw zębodołowy dolny jest gałęzią nerwu","a":["ocznego","szczękowego","zuchwowego","językowo-gardłowego","twarzowego"],"correct":2},
-{"q":"Nerw promieniowy odchodzi od pęcherzyka","a":["a. przedniego","tylnego","c. bocznego","nerwy rdzeniowe"],"correct":1},
-{"q":"Splot ramienny powstaje z gałęzi","a":["C1-Th2","C5-Th1","Th1-Th2","C1-C4","C5-L2"],"correct":1},
-{"q":"Największym splotem ustroju jest splot","a":["szyjny","ramienny","lędźwiowy","krzyżowy","A i B tworzą razem największy splot"],"correct":3},
-{"q":"Nerwem splotu ramiennego nie jest nerw","a":["mięśniowo-skórny","pachowy","pośrodkowy","promienny","Wszystkie powyższe nerwy są nerwami splotu"],"correct":4},
-{"q":"W skład układu nerwowego ośrodkowego nie wchodzi:","a":["móżdżek","rdzeń kręgowy","półkule mózgu","nerwy rdzeniowe","Wszystkie powyższe struktury tworzą układ nerwowy ośrodkowy"],"correct":3},
-{"q":"Rdzeń kręgowy korczy się na wysokości kręgu","a":["piersiowego XII","lędzwiowego I i II",")lędzwiowego IV I V","szyjnego VII","Żadne z powyższych"],"correct":1},
-{"q":"Prawdą odnośnie rdzenia kręgowego jest, że","a":["istota szara znajduję się wewnątrz","istota biala znajduje się wewnątrz","c)istota biała tworzy kształt litery H","róg przedni tworzy istota biala","Żadne"],"correct":0},
-{"q":"W rdzeniu kręgowym wyróżniamy drogi:","a":["własne rdzenia kręgowego","rdzeniowo-mózgowe","mózgowo-rdzeniowe","wszystkie powyższe","żaden z powyższych"],"correct":3},
-{"q":"Drogi piramidowe należą do dróg:","a":["własnych rdzenia kręgowego","rdzeniowo-mózgowe","c)mózgowo-rdzeniowych","rdzeniowo-opuszkowych","žadne"],"correct":2},
-{"q":"Klinicznie do pnia mózgu nie zaliczamy","a":["mostu","śródmózgowia","rdzenie przedłuzonego","kresomózgowia","Zadne"],"correct":3}
+  {
+    "q": "W sklad ukladu nerwowego ośrodkowego nie wchodzi",
+    "a": [
+      "nerwy rdzeniowe",
+      "móżdżek",
+      "rdzeń kręgowy",
+      "półkule mózgu"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Rdzeń kręgowy kończy się na wysokości kręgu",
+    "a": [
+      "Lędźwiowego 1,2",
+      "piersiowego XII",
+      "lędźwiowego IV,V",
+      "szyjnego VII"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Klinicznie do pnia mózgu nie zaliczamy",
+    "a": [
+      "Kresomózgowia",
+      "mostu",
+      "śródmózgowia",
+      "rdzenia przedłużonego"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Na powierzchni wypuklej półkul mózgu možemy wyróżnić platy w liczbie",
+    "a": [
+      "4",
+      "2",
+      "5",
+      "6"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Robak jest częscią",
+    "a": [
+      "Mozdzku",
+      "mostu",
+      "rdzenia przedłużonego",
+      "wzgórza"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Do podwzgorza zaliczamy",
+    "a": [
+      "Wszystkie wymienione (Ciała suteczkowate, guz popielaty, skrzyzowanie wzrokowe, lejek)",
+      "Tylko lejek",
+      "Tylko ciała suteczkowate",
+      "Tylko skrzyżowanie wzrokowe"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "W mózgowiu nie wyróžniamy komór",
+    "a": [
+      "Przyśrodkowej",
+      "Bocznej",
+      "Trzeciej",
+      "Czwartej"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Wodociąg mozgu fączy komory",
+    "a": [
+      "Trzecią | czwarta",
+      "Pierwszą i drugą",
+      "Boczne i trzecią",
+      "Boczne i czwartą"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Na powierzchni brzusznej mostu i rdzenia wychodzą nerwy",
+    "a": [
+      "V-XII",
+      "I–IV",
+      "III–VI",
+      "I–XII"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Bruzda Srodkowa oddziela platy",
+    "a": [
+      "Czołowy od ciemieniowego",
+      "Ciemieniowy od potylicznego",
+      "Czołowy od skroniowego",
+      "Skroniowy od potylicznego"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Krew do mózgowia doprowadza",
+    "a": [
+      "Tętnica kręgowa i szyjna wewnętrzna",
+      "Tętnica szyjna zewnętrzna i podobojczykowa",
+      "Tętnica twarzowa i skroniowa powierzchowna",
+      "Tętnica szyjna zewnętrzna i kręgowa"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Najbardziej zewnętrzną z opon mózgu jest",
+    "a": [
+      "Twarda",
+      "Pajęcza",
+      "Miękka",
+      "Naczyniówkowa"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Oliwka widoczna jest na powierzchni",
+    "a": [
+      "Rdzenia przedłužonego",
+      "Mostu",
+      "Śródmózgowia",
+      "Móżdżku"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Mięsień skośny górny jest unerwiony przez nerw",
+    "a": [
+      "Bloczkowy",
+      "Okoruchowy",
+      "Odwodzący",
+      "Trójdzielny"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Prawidłowe działanie układy przywspółczulnego polega na",
+    "a": [
+      "skurczu mięśni oskrzeli",
+      "Rozszerzeniu źrenic",
+      "Przyspieszeniu akcji serca",
+      "Rozkurczu oskrzeli"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Nerwem VIll jest nerw",
+    "a": [
+      "przedsionkowo-ślimakowy",
+      "Twarzowy",
+      "Językowo-gardłowy",
+      "Dodatkowy"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Nerwem luków skrzelowych nie jest nerw",
+    "a": [
+      "podjęzykowy",
+      "Twarzowy",
+      "Trójdzielny",
+      "Językowo-gardłowy"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Nerw okoruchowy nie unerwia mięśnia",
+    "a": [
+      "prostego bocznego",
+      "prostego górnego",
+      "prostego dolnego",
+      "prostego przyśrodkowego"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Nerw zębodolowy dolny jest galęzią nerwu",
+    "a": [
+      "Zuchwowego",
+      "Ocznego",
+      "Szczękowego",
+      "Twarzowego"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Przez otwór zyły szyjnej przechodzi nerw",
+    "a": [
+      "wszystkie wymienione (językowo gardlowy, blędny, dodatkowy)",
+      "Tylko nerw błędny",
+      "Tylko nerw dodatkowy",
+      "Tylko nerw językowo-gardłowy"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Uklad wspołczulny zlokalizowany jest w segmentach",
+    "a": [
+      "C8-L2",
+      "C1–C8",
+      "Th5–L5",
+      "S2–S4"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Prawidłowe działanie układu współczulnego polega na",
+    "a": [
+      "Rozkurczu naczyn wiercowych",
+      "Skurczu mięśni oskrzeli",
+      "Zwolnieniu pracy serca",
+      "Zwiększeniu wydzielania śliny"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Splot szyjny powstaje z galęzi",
+    "a": [
+      "C1-C4",
+      "C5–Th1",
+      "Th1–Th12",
+      "L1–L4"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "W splocie ramiennym wyróżniamy pnie",
+    "a": [
+      "górny, Srodkowy, dolny",
+      "Przedni, tylny, boczny",
+      "Szyjny, piersiowy, lędźwiowy",
+      "Przyśrodkowy, boczny, tylny"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Nerwem splotu ramiennego nie jest nerw",
+    "a": [
+      "Wszystkie wymienione są (mięśniowo- skośny, promieniowy, łokciowy, pachowy)",
+      "Nerw udowy",
+      "Nerw kulszowy",
+      "Nerw zasłonowy"
+    ],
+    "correct": 0,
+    "note": "W notatkach odpowiedź jest opisowa i nie odpowiada wprost konstrukcji pytania."
+  },
+  {
+    "q": "Układ wewnątrzwydzielniczy tworzą gruczoły z wyjątkiem",
+    "a": [
+      "nerki",
+      "Przysadka",
+      "Tarczyca",
+      "Przytarczyce"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Gruczol tarczowy przykryty jest mięśniami",
+    "a": [
+      "wszystkie wymienione (mostkowo tarczowym, lopatkowo gnykowym, mostkowo gnykowym)",
+      "Tylko mięśniem mostkowo-tarczowym",
+      "Tylko mięśniem łopatkowo-gnykowym",
+      "Tylko mięśniem mostkowo-gnykowym"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Gruczoły przytarczyczne występują przeważnie w liczbie",
+    "a": [
+      "4",
+      "2",
+      "6",
+      "8"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Do przodu od prawego nadnercza znajduje się",
+    "a": [
+      "watroba",
+      "Śledziona",
+      "Trzustka",
+      "Żołądek"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Przysadka składa się z płatów",
+    "a": [
+      "przedniego i tylnego",
+      "Górnego i dolnego",
+      "Prawego i lewego",
+      "Przedniego i środkowego"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co to neuromer?",
+    "a": [
+      "segment rdzenia kręgowego z którego odchodzi JEDNA PARA nerwów rdzeniowych.",
+      "Odcinek nerwu czaszkowego o stałej długości",
+      "Pęczek włókien w korzeniu grzbietowym",
+      "Jedna para zwojów współczulnych"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Liczba nerwów czaszkowych?",
+    "a": [
+      "24 ,bo jest 12 par nerwów czaszkowych",
+      "10 par nerwów czaszkowych",
+      "11 par nerwów czaszkowych",
+      "13 par nerwów czaszkowych"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Jaki nerw ma włókna ruchowe?",
+    "a": [
+      "III,IV,trzecia gałąž n.V -n.Żuchwowy ,IV,VII,IX,X,XI,XII",
+      "I, II, VIII",
+      "I, II, V1",
+      "Wyłącznie I i II"
+    ],
+    "correct": 0,
+    "note": "W notatkach pominięto lub powtórzono niektóre numery nerwów."
+  },
+  {
+    "q": "Co unerwia gałąż- struna bębenkowa ?",
+    "a": [
+      "drogą wydzielniczą unerwia- śliniankę podżuchwową i podjęzykową oraz błonę śluzową okolicy podjęzykowej i przednie cz. Języka, oraz Smakowo: błonę śluzową 2/3 przednich języka.",
+      "Wyłącznie śliniankę przyuszną",
+      "Wyłącznie tylną część języka",
+      "Wyłącznie mięśnie języka"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Ogon koński co go tworzy?",
+    "a": [
+      "korzenie nerwów lędźwiowych, krzyżowych i guzicznych.",
+      "Korzenie nerwów szyjnych i piersiowych",
+      "Wyłącznie korzenie nerwów piersiowych",
+      "Wyłącznie korzenie nerwów szyjnych"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co unerwia odbytnice po obu stronach?",
+    "a": [
+      "splot podburzyszny dolny",
+      "Splot ramienny",
+      "Splot szyjny",
+      "Splot lędźwiowy"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Pień nerwu rdzeniowego jakie oddaje gałęzie?",
+    "a": [
+      "gałąź brzuszna (przednia, gałąż grzbietowa(tylna), gałąż oponową, gałąź łączącą.",
+      "Wyłącznie gałąź grzbietową",
+      "Gałąź górną, dolną i boczną",
+      "Gałąź oczną, szczękową i żuchwową"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "największy nerw splotu lędźwiowego?",
+    "a": [
+      "n. udowy",
+      "Nerw zasłonowy",
+      "Nerw biodrowo-podbrzuszny",
+      "Nerw płciowo-udowy"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Największy nerw ciała ludzkiego?",
+    "a": [
+      "nerw kulszowy (w splocie krzyżowym-jednocześnie największy splot ciała )",
+      "Nerw udowy",
+      "Nerw promieniowy",
+      "Nerw pośrodkowy"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Gdzie leżą ośrodki współczulne rdzenia kręgowego?",
+    "a": [
+      "w jądrze pośrednio -bocznym - w bocznym rogu rdzenia na C8-L2-L3",
+      "W rogach tylnych rdzenia C1–C4",
+      "W korze mózgu",
+      "W jądrach przywspółczulnych pnia mózgu"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "n.skalisty większy jaki to nerw?",
+    "a": [
+      "to gałąż od n.VII twarzowego , razem ze struną bębenkową.",
+      "Gałąź nerwu trójdzielnego",
+      "Gałąź nerwu błędnego",
+      "Gałąź nerwu językowo-gardłowego"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "nn.międzyżebrowe czego nie unerwiają?",
+    "a": [
+      "nie unerwiają tylnej strony karku, głowy itd.",
+      "Mięśni międzyżebrowych",
+      "Mięśni ściany brzucha",
+      "Skóry klatki piersiowej"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "gdzie nie dochodzi n.błędny(x)?",
+    "a": [
+      "do odbytnicy",
+      "Do serca",
+      "Do żołądka",
+      "Do oskrzeli"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Jakie włókna ma gałąź oponowa?",
+    "a": [
+      "współczulne zazwojowe,czuciowe",
+      "Tylko włókna ruchowe somatyczne",
+      "Tylko włókna przywspółczulne przedzwojowe",
+      "Wyłącznie włókna smakowe"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Która gałąź n.trójdzielnego V prowadzi włókna ruchowe?",
+    "a": [
+      "V3-n. Żuchwowy",
+      "V1 – nerw oczny",
+      "V2 – nerw szczękowy",
+      "Wszystkie trzy gałęzie V1, V2 i V3"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Który nerw zaopatruje .prosty boczny gałki ocznej?",
+    "a": [
+      "n.odwodzące VI",
+      "Nerw okoruchowy III",
+      "Nerw bloczkowy IV",
+      "Nerw wzrokowy II"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Jak leży splot ramienny?",
+    "a": [
+      "na wysokości C5-Th1",
+      "Na wysokości C1–C4",
+      "Na wysokości Th5–Th12",
+      "Na wysokości L1–L4"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Nerwy przechodzące przez otwór szyjny?",
+    "a": [
+      "n.IX,X,XI",
+      "Nerwy III, IV, VI",
+      "Nerwy VII, VIII, XII",
+      "Nerwy I, II, III"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Który nerw oddaje strunę bębenkową?",
+    "a": [
+      "n.twarzowy VII",
+      "Nerw trójdzielny V",
+      "Nerw językowo-gardłowy IX",
+      "Nerw podjęzykowy XII"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Unerwienie ruchowe języka-odpowiada za to?",
+    "a": [
+      "nn.podjezykowe XII",
+      "Nerw twarzowy VII",
+      "Nerw trójdzielny V",
+      "Nerw błędny X"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co powoduje n.błędnyx?",
+    "a": [
+      "powoduje skurcz oskrzeli ,a podrażnienie n.błędnego X powoduje bradykardie.",
+      "Powoduje rozszerzenie oskrzeli i tachykardię",
+      "Powoduje wyłącznie rozszerzenie źrenic",
+      "Powoduje wyłącznie skurcz mięśni szkieletowych"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co powoduje n.krtaniowy wsteczny i czym jest?",
+    "a": [
+      "jest to gałąź n. błędnego w odcinku szyjnym ,powoduje chrypkę .",
+      "Jest gałęzią nerwu trójdzielnego i unerwia żwacze",
+      "Jest gałęzią nerwu twarzowego i odpowiada za smak",
+      "Jest gałęzią nerwu podjęzykowego i unerwia język"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Które nerwy jako jedyne wychodzą z mózgowia na części grzbietowej?",
+    "a": [
+      "IV para czyli nerw bloczkowy.",
+      "III para – nerw okoruchowy",
+      "VI para – nerw odwodzący",
+      "XII para – nerw podjęzykowy"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Jak biegnie droga nerwowa dośrodkowa i odśrodkowa?",
+    "a": [
+      "Dośrodkowa to z receptora do ośrodka- mózgu",
+      "Dośrodkowa biegnie od ośrodka do efektora",
+      "Obie drogi biegną tylko do mózgu",
+      "Odśrodkowa biegnie od receptora do ośrodka"
+    ],
+    "correct": 0,
+    "note": "Odpowiedź w notatkach opisuje tylko drogę dośrodkową."
+  },
+  {
+    "q": "Które nerwy jako jedyne nie ulegają skrzyżowaniu?",
+    "a": [
+      "Nerwy węchowe I.",
+      "Nerwy wzrokowe II",
+      "Nerwy bloczkowe IV",
+      "Nerwy dodatkowe XI"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Jaki jest najważniejszy nerw czuciowy twarzy?",
+    "a": [
+      "n. trójdzielny V ze wszystkimi swoimi gałęziami -n.ocznym,n.szczękowym i n. podżuchwowym",
+      "Nerw twarzowy VII",
+      "Nerw błędny X",
+      "Nerw podjęzykowy XII"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Najwažniejszym nerwem ruchowym jest?",
+    "a": [
+      ".twarzowy(VII)- w otworze rylcowo sutkowym",
+      "Nerw trójdzielny V",
+      "Nerw podjęzykowy XII",
+      "Nerw bloczkowy IV"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Jak jest unerwiony język?",
+    "a": [
+      "2/3 przednie języka unerwione przez strunę bębenkową (od .twarzowego VII) 1/3 tylna-nasada języka - przez gałęzie językowe które oddaje n.językowo-gardłowy Ix ruchowo język unerwiony przez -n.podjęzykowy XII",
+      "Wyłącznie przez nerw błędny",
+      "Wyłącznie przez nerw trójdzielny",
+      "Wyłącznie przez nerw językowo-gardłowy"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co należy do jader podstawnych/ podkorowych?",
+    "a": [
+      "jądro ogoniaste, ciało migdałowate, przedmurze,jądro soczewkowate(tworzą je gałka blada i skorupa)",
+      "Jądra wzgórza i podwzgórza",
+      "Jądra nerwów III, IV, VI",
+      "Jądra smukłe i klinowate"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Wodociąg mózgu co łączy?",
+    "a": [
+      "Komore trzecią z komorą czwartą",
+      "Komory boczne ze sobą",
+      "Komory boczne z komorą trzecią",
+      "Komorę czwartą z kanałem kręgowym"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co oddziela opone pajęczą-pajęczynówke od opony twardej?",
+    "a": [
+      "jamą podtwardówkowa znajduje się pomiędzy nimi",
+      "Jama podpajęczynówkowa",
+      "Jama nadtwardówkowa",
+      "Komora czwarta"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Droga piramidowa -jaka to droga?",
+    "a": [
+      "droga przewodząca impulsy Swiadome(czucia Swiadomego)",
+      "Droga przewodząca czucie temperatury",
+      "Droga przewodząca czucie bólu",
+      "Droga autonomiczna trzewna"
+    ],
+    "correct": 0,
+    "note": "W notatkach błędnie utożsamiono drogę piramidową z drogą czucia świadomego."
+  },
+  {
+    "q": "Oksytocyna- co powoduje?",
+    "a": [
+      "produkowana przez tylny płat przysadki, bierze udział w wydzielaniu mleka w czasie laktacji, wspomaga zapłodnienie komórki jajowej i stymuluje obkurczanie się macicy po porodzie.",
+      "Hamuje skurcze macicy i wydzielanie mleka",
+      "Obniża stężenie wapnia we krwi",
+      "Hamuje wydzielanie prolaktyny"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co tworzy tyłomózgowie wtórne?",
+    "a": [
+      "rdzeń przedłużony, móżdżek, most",
+      "Śródmózgowie i międzymózgowie",
+      "Kresomózgowie i międzymózgowie",
+      "Wyłącznie rdzeń przedłużony"
+    ],
+    "correct": 0,
+    "note": "W notatkach wymieniono rdzeń przedłużony, który nie należy do tyłomózgowia wtórnego."
+  },
+  {
+    "q": ".Trójneuronowe drogi to..?",
+    "a": [
+      "droga czucie głębokiego, ,smakowa, droga czucia bólu i temp.",
+      "Droga piramidowa, droga korowo-rdzeniowa, droga korowo-jądrowa",
+      "Droga nerwu przeponowego, droga ruchowa twarzy, droga współczulna",
+      "Droga węchowa, droga ruchowa nerwu III, droga korowo-rdzeniowa"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co produkuje płyn mózgowo-rdzeniowy?",
+    "a": [
+      "splot naczyniówkowy",
+      "Przysadka mózgowa",
+      "Szyszynka",
+      "Splot szyjny"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "co jest ograniczone od tyłu i od tyłu móżdžkiem oraz od przodu i dołu powierzchnią grzbietową mostu i rdzenia przedłużonego?",
+    "a": [
+      "komora czwarta",
+      "Komora trzecia",
+      "Komora boczna",
+      "Wodociąg mózgu"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Grasica-bylo cos do zaznaczenia ?",
+    "a": [
+      "Grasica ulega inwolucji, szczyt rozwinięcia między 2 a 3 r.2 ma 37g ,hormony wydzielane przez nią regulują prace limfocytów T.",
+      "Grasica nie zmienia wielkości z wiekiem",
+      "Grasica wydziela wyłącznie insulinę",
+      "Grasica nie uczestniczy w dojrzewaniu limfocytów T"
+    ],
+    "correct": 0,
+    "note": "Pytanie w notatkach nie ma pełnej treści."
+  },
+  {
+    "q": "do czego należy oliwka oraz piramidy ?",
+    "a": [
+      "do powierzchni brzusznej rdzenia przedłuzonego",
+      "Do powierzchni grzbietowej mostu",
+      "Do powierzchni bocznej móżdżku",
+      "Do powierzchni brzusznej śródmózgowia"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "lle i jakich jest segmentów rdzenia kręgowego?",
+    "a": [
+      "C1-C8-( 8 szyjnych) Th1-Th12-(12 piersiowych) L1-L5- (5 lędźwiowych) S1-S5( 5 krzyżowych) CO-(1 guziczny)",
+      "7 szyjnych, 12 piersiowych, 5 lędźwiowych, 5 krzyżowych, 2 guziczne",
+      "8 szyjnych, 10 piersiowych, 5 lędźwiowych, 6 krzyżowych, 2 guziczne",
+      "8 szyjnych, 12 piersiowych, 4 lędźwiowe, 4 krzyżowe, 3 guziczne"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "co tworzy pień mózgu?",
+    "a": [
+      "śródmózgowie, most, rdzeń przedłužony, móżdžek",
+      "Śródmózgowie, most, móżdżek",
+      "Międzymózgowie, most, rdzeń przedłużony",
+      "Kresomózgowie, most, rdzeń przedłużony"
+    ],
+    "correct": 0,
+    "note": "W notatkach błędnie do pnia mózgu zaliczono móżdżek."
+  },
+  {
+    "q": "Jakie płaty przykrywają wyspe?",
+    "a": [
+      "czołowy, czołowo-ciemieniowe i skroniowe",
+      "Tylko płat potyliczny",
+      "Płat potyliczny i móżdżek",
+      "Płat skroniowy i potyliczny"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co oddziela tęczówka?",
+    "a": [
+      "przednią komore oka, od tylnej komory oka",
+      "Ciało szkliste od soczewki",
+      "Rogówkę od twardówki",
+      "Siatkówkę od naczyniówki"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "lle jest płynu mózgowo-rdzeniowego?",
+    "a": [
+      "135ml",
+      "35 ml",
+      "75 ml",
+      "350 ml"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Gdzie leży tarczyca?",
+    "a": [
+      "przednio -dolna część szyi",
+      "W tylnej części jamy brzusznej",
+      "W śródpiersiu tylnym",
+      "W jamie czaszki"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Gdzie leży róg przedni komory bocznej?",
+    "a": [
+      "w płacie czołowym + róg tylny(płat potyliczny) + róg dolny (platy skroniowe)",
+      "W płacie skroniowym",
+      "W płacie potylicznym",
+      "W móżdżku"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co tworzy ciało prążkowane?",
+    "a": [
+      "jądro ogoniaste i jądro soczewkowate",
+      "Skorupa i wzgórze",
+      "Ciało migdałowate i hipokamp",
+      "Jądro czerwienne i istota czarna"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co tworzy prąžkowie?",
+    "a": [
+      "skorupa i jądro ogoniaste",
+      "Skorupa i gałka blada",
+      "Jądro soczewkowate i wzgórze",
+      "Ciało migdałowate i gałka blada"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Gdzie rozpoczynają się drogi przywspółczulne n. czaszkowych?",
+    "a": [
+      "W jądrach przywspółczulnych nerwów III,VII ,IX i X.",
+      "W jądrach nerwów II, IV, VI",
+      "W korze móżdżku",
+      "W rogach przednich odcinka piersiowego"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Do której części ucha należy błona bębenkowa?",
+    "a": [
+      "ucho Srodkowe",
+      "Ucho wewnętrzne",
+      "Ucho zewnętrzne",
+      "Trąbka słuchowa"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Hormony przedniego płata przysadki?",
+    "a": [
+      "folikulotropina hormon luteinizujący somatotropina prolaktyna kortykotropina tyreotropina melanotropina",
+      "Wazopresyna i oksytocyna",
+      "Adrenalina i noradrenalina",
+      "Insulina i glukagon"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co nie należy do wypustek opony twardej?:",
+    "a": [
+      "o przebiegu strzałkowym: sierp mózgu i sierp módżku o przebiegu poziomym:namiot móżdžku i przepona lub przegroda siodła tureckiego",
+      "Wyłącznie sierp mózgu",
+      "Wyłącznie namiot móżdżku",
+      "Wyłącznie przepona siodła"
+    ],
+    "correct": 0,
+    "note": "Odpowiedź z notatek wymienia struktury, które właśnie należą do wypustek opony twardej."
+  },
+  {
+    "q": "Skąd wychodzi opona twarda z mózgowia?",
+    "a": [
+      "z tylnego dołu czaszki ,dokładniej przez otwór wielki(potylica)",
+      "Z kanału kręgowego przez otwory międzykręgowe",
+      "Z jamy nosowej przez blaszkę sitową",
+      "Z oczodołu przez szczelinę oczodołową górną"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Gdzie leżą jądra dróg współczulnych?",
+    "a": [
+      "w jądrach pośrednio-bocznych, w rogach bocznych rdzenia na C8-L2-L3",
+      "W rogach przednich rdzenia szyjnego",
+      "W korze potylicznej",
+      "W jądrach ruchowych nerwów czaszkowych"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Gdzie rozpoczynają się odSrodkowe drogi współczulne?",
+    "a": [
+      "w rogach bocznych rdzenia na C8- L2-L3",
+      "W korze mózgu",
+      "W rogach tylnych rdzenia S1–S5",
+      "W zwojach nerwów czuciowych"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Co wytwarzają przytarczyce?",
+    "a": [
+      "Parathormon, reguluje stężenie wapnia we krwii",
+      "Tyroksynę",
+      "Kalcytoninę",
+      "Kortyzol"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Ucho środkowe tworzą?",
+    "a": [
+      "błona bębenkowa, jama bębenkowa,trąbka słuchowa",
+      "Małżowina uszna, przewód słuchowy, błona bębenkowa",
+      "Ślimak, przedsionek, kanały półkoliste",
+      "Narząd Cortiego, przedsionek, trąbka słuchowa"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Położenie trzustki?",
+    "a": [
+      "po lewej stronie, do przodu od kręgosłupa, na L2-L3",
+      "Za żołądkiem na poziomie Th5",
+      "W miednicy mniejszej",
+      "W jamie klatki piersiowej"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Gruczoł tarczowy zbudowany jest z..?",
+    "a": [
+      "2 płatów bocznych : prawego i lewego i Węziny(jej niestełym elementem jest płat piramidowy)",
+      "Jednego płata środkowego",
+      "Trzech jednakowych płatów bez węziny",
+      "Dwóch płatów połączonych spoidłem mózgu"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Nerw I czaszkowy to nerw",
+    "a": [
+      "oczny",
+      "nosowy",
+      "wzrokowy",
+      "okoruchowy",
+      "węchowy"
+    ],
+    "correct": 4
+  },
+  {
+    "q": "Rdzeń kręgowy kończy się na wysokości kręgu",
+    "a": [
+      "piersiowego XII",
+      "ledźwiowego I,II",
+      "lędźwiowego IV,V",
+      "szyjnego VII",
+      "zadna odp nie jest poprawna"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "Komórki przedzwojowe układu przywspółczulnego znajdują się w jądrach nerwów",
+    "a": [
+      "okoruchowego",
+      "twarzowego",
+      "Językowo-gardłowego blednego",
+      "e. wszystkie powyższe"
+    ],
+    "correct": 3
+  },
+  {
+    "q": "W rdzeniu kręgowym wyróżniamy drogi",
+    "a": [
+      "a. własne rdzenia kręgowego",
+      "rdzeniowo-mózgowe",
+      "mózgowo-rdzeniowe",
+      "wszystkie powyższe",
+      "zadne z powyzszych"
+    ],
+    "correct": 3
+  },
+  {
+    "q": "Drogi piramidowe należą do dróg",
+    "a": [
+      "własnych rdzenia kr.",
+      "rdzeniowo-mozgowych",
+      "mózgowo-rdzeniowych",
+      "rdzeniowo-opuszkowych",
+      "żadne z powyższych"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Klinicznie do pnia mózgu nie zaliczamy",
+    "a": [
+      "mostu",
+      "śródmózgowia",
+      "rdzenia przedłuzonego",
+      "kresomózgowia",
+      "zadne z powyzszych"
+    ],
+    "correct": 3
+  },
+  {
+    "q": "Na powierzchni wypukłej półkul mózgu możemy wyróżnić płaty w liczbie",
+    "a": [
+      "a. 2",
+      "4",
+      "d.5",
+      "e. 6"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "Oliwka widoczna jest na powierzchni",
+    "a": [
+      "a. rdzenia kr.",
+      "móżdzku",
+      "rdzenia przedłuzonego",
+      "pólkul mózgu",
+      "mostu"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Prawidłowe działanie układu przywspółczulnego polega na",
+    "a": [
+      "skurczu miesni oskrzeli",
+      "Lędźwiowego 1,2",
+      "C8-L2",
+      "C1-C4"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Nerw trójdzielny wychodzi z mózgowia",
+    "a": [
+      "a. nad piramida",
+      "w dole międzykolanowym",
+      "przed skrzyżowaniem wzrokowym",
+      "na wysokości oliwki",
+      "na granicy mostu i konara środkowego"
+    ],
+    "correct": 4
+  },
+  {
+    "q": "W układzie przywspółczulnym nie wyróżniamy części",
+    "a": [
+      "a. głowowej",
+      "głowowej i krzyzowej",
+      "krzyżowej",
+      "szyjnej",
+      "śródściennej"
+    ],
+    "correct": 3
+  },
+  {
+    "q": "Nerw dodatkowy wytwarza polączenie z nerwem",
+    "a": [
+      "przedsionkowo-ślimakowym",
+      "językowo-gardłowym",
+      "blednym",
+      "podjęzykowym",
+      "żadne z powyższych"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Wodociag mózgu łączy komory",
+    "a": [
+      "boczne",
+      "4 i boczne",
+      "3 i boczne",
+      "3 i 4",
+      "e. żadne z powyższych"
+    ],
+    "correct": 3
+  },
+  {
+    "q": "Na powierzchni brzusznej mostu i rdzenia wychodzą nerwy",
+    "a": [
+      "I-IV",
+      "III-VI",
+      "tylko XII",
+      ". V-XII",
+      "e. I-XII"
+    ],
+    "correct": 3
+  },
+  {
+    "q": "Nerw zębodołowy dolny jest gałęzią nerwu",
+    "a": [
+      "ocznego",
+      "szczękowego",
+      "zuchwowego",
+      "językowo-gardłowego",
+      "twarzowego"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Nerw promieniowy odchodzi od pęcherzyka",
+    "a": [
+      "a. przedniego",
+      "tylnego",
+      "c. bocznego",
+      "nerwy rdzeniowe",
+      "przyśrodkowego"
+    ],
+    "correct": 1,
+    "note": "W źródle zachowały się tylko trzy warianty odpowiedzi."
+  },
+  {
+    "q": "Splot ramienny powstaje z gałęzi",
+    "a": [
+      "C1-Th2",
+      "C5-Th1",
+      "Th1-Th2",
+      "C1-C4",
+      "C5-L2"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "Największym splotem ustroju jest splot",
+    "a": [
+      "szyjny",
+      "ramienny",
+      "lędźwiowy",
+      "krzyżowy",
+      "A i B tworzą razem największy splot"
+    ],
+    "correct": 3
+  },
+  {
+    "q": "Nerwem splotu ramiennego nie jest nerw",
+    "a": [
+      "mięśniowo-skórny",
+      "pachowy",
+      "pośrodkowy",
+      "promienny",
+      "Wszystkie powyższe nerwy są nerwami splotu"
+    ],
+    "correct": 4
+  },
+  {
+    "q": "W skład układu nerwowego ośrodkowego nie wchodzi:",
+    "a": [
+      "móżdżek",
+      "rdzeń kręgowy",
+      "półkule mózgu",
+      "nerwy rdzeniowe",
+      "Wszystkie powyższe struktury tworzą układ nerwowy ośrodkowy"
+    ],
+    "correct": 3
+  },
+  {
+    "q": "Rdzeń kręgowy korczy się na wysokości kręgu",
+    "a": [
+      "piersiowego XII",
+      "lędzwiowego I i II",
+      ")lędzwiowego IV I V",
+      "szyjnego VII",
+      "Żadne z powyższych"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "Prawdą odnośnie rdzenia kręgowego jest, że",
+    "a": [
+      "istota szara znajduję się wewnątrz",
+      "istota biala znajduje się wewnątrz",
+      "c)istota biała tworzy kształt litery H",
+      "róg przedni tworzy istota biala",
+      "Żadne"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "W rdzeniu kręgowym wyróżniamy drogi:",
+    "a": [
+      "własne rdzenia kręgowego",
+      "rdzeniowo-mózgowe",
+      "mózgowo-rdzeniowe",
+      "wszystkie powyższe",
+      "żaden z powyższych"
+    ],
+    "correct": 3
+  },
+  {
+    "q": "Drogi piramidowe należą do dróg:",
+    "a": [
+      "własnych rdzenia kręgowego",
+      "rdzeniowo-mózgowe",
+      "c)mózgowo-rdzeniowych",
+      "rdzeniowo-opuszkowych",
+      "žadne"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Klinicznie do pnia mózgu nie zaliczamy",
+    "a": [
+      "mostu",
+      "śródmózgowia",
+      "rdzenie przedłuzonego",
+      "kresomózgowia",
+      "Zadne"
+    ],
+    "correct": 3
+  }
 ];
 const $=id=>document.getElementById(id);let deck=[],pos=0,score=0,chosen=null,mistakes=[];
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 function show(which){['start','play','finish'].forEach(id=>$(id).classList.toggle('hidden',id!==which))}
 function begin(){let n=$('count').value;deck=shuffle(BANK).slice(0,n==='all'?BANK.length:Number(n)).map(q=>{let opts=shuffle(q.a.map((text,i)=>({text,correct:i===q.correct})));return {...q,opts}});pos=0;score=0;mistakes=[];show('play');render()}
-function render(){chosen=null;const q=deck[pos];$('number').textContent=`Pytanie ${pos+1} z ${deck.length}`;$('points').textContent=`Punkty: ${score}`;$('fill').style.width=`${pos/deck.length*100}%`;$('question').textContent=q.q;$('next').disabled=true;$('next').textContent=pos===deck.length-1?'Zobacz wynik →':'Następne pytanie →';$('feedback').className='feedback hidden';$('answers').replaceChildren();q.opts.forEach((op,i)=>{const btn=document.createElement('button');btn.className='answer';btn.innerHTML=`<span class="letter">${'ABCD'[i]}</span>`;const text=document.createElement('span');text.textContent=op.text;btn.append(text);btn.addEventListener('click',()=>pick(i));$('answers').append(btn)})}
+function render(){chosen=null;const q=deck[pos];$('number').textContent=`Pytanie ${pos+1} z ${deck.length}`;$('points').textContent=`Punkty: ${score}`;$('fill').style.width=`${pos/deck.length*100}%`;$('question').textContent=q.q;$('next').disabled=true;$('next').textContent=pos===deck.length-1?'Zobacz wynik →':'Następne pytanie →';$('feedback').className='feedback hidden';$('sourceNote').textContent=q.note?'Uwaga o źródle: '+q.note:'';$('sourceNote').classList.toggle('hidden',!q.note);$('answers').replaceChildren();q.opts.forEach((op,i)=>{const btn=document.createElement('button');btn.className='answer';btn.innerHTML=`<span class="letter">${'ABCDE'[i]}</span>`;const text=document.createElement('span');text.textContent=op.text;btn.append(text);btn.addEventListener('click',()=>pick(i));$('answers').append(btn)})}
 function pick(i){if(chosen!==null)return;chosen=i;const q=deck[pos],correct=q.opts[i].correct;score+=Number(correct);if(!correct)mistakes.push({question:q.q,yours:q.opts[i].text,right:q.opts.find(x=>x.correct).text});const btns=[...$('answers').children];btns.forEach((b,j)=>{b.disabled=true;if(q.opts[j].correct)b.classList.add('correct');else if(j===i)b.classList.add('wrong')});$('points').textContent=`Punkty: ${score}`;$('feedback').textContent=correct?'Świetnie! Poprawna odpowiedź.':`Poprawna odpowiedź: ${q.opts.find(x=>x.correct).text}`;$('feedback').className='feedback '+(correct?'ok':'no');$('next').disabled=false}
 function advance(){if(chosen===null)return;if(++pos<deck.length)render();else finish()}
 function finish(){show('finish');$('finalScore').textContent=`${score} / ${deck.length}`;$('summary').textContent=`Wynik: ${Math.round(score/deck.length*100)}% poprawnych odpowiedzi.`;$('review').classList.add('hidden');$('review').replaceChildren();$('reviewBtn').disabled=mistakes.length===0;$('reviewBtn').textContent=mistakes.length?`Pokaż błędy (${mistakes.length})`:'Bez błędów!';mistakes.forEach(m=>{const div=document.createElement('div');div.className='review-item';const strong=document.createElement('strong');strong.textContent=m.question;const wrong=document.createElement('div');wrong.textContent='Twoja odpowiedź: '+m.yours;const right=document.createElement('div');right.textContent='Poprawna: '+m.right;div.append(strong,wrong,right);$('review').append(div)})}
