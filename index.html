@@ -3,7 +3,7 @@
 <style>
 :root{--ink:#473629;--muted:#88745f;--bg:#fffaf0;--card:#fffdf8;--accent:#df8c43;--accent2:#ffecd1;--line:#edd7b8;--good:#317655;--bad:#a64545}*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);min-height:100vh;background:linear-gradient(90deg,#f4dcae55 50%,transparent 50%) 0 0/56px 56px,linear-gradient(#f4dcae55 50%,transparent 50%) 0 0/56px 56px,var(--bg)}main{width:min(740px,calc(100% - 30px));margin:40px auto 70px}.top{text-align:center;margin-bottom:22px}.bagels{font-size:64px;letter-spacing:12px;filter:drop-shadow(0 5px 2px #8c633029)}h1{font-size:clamp(35px,7vw,57px);margin:2px 0;color:#d98637;letter-spacing:2px}.subtitle{color:var(--muted);font-size:15px}.panel{background:var(--card);border:2px solid var(--line);border-radius:23px;padding:clamp(20px,4vw,38px);box-shadow:0 10px 32px #6b49191a}.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;margin:20px 0}button,select{font:inherit}button{cursor:pointer;border-radius:14px;border:2px solid var(--line);padding:13px 18px;background:white;color:var(--ink);font-weight:650;transition:transform .12s,background .12s}button:hover:not(:disabled){transform:translateY(-1px);background:#fff1dc}button:disabled{opacity:.55;cursor:default}.primary{background:var(--accent);color:white;border-color:var(--accent)}.primary:hover:not(:disabled){background:#c87530}select{border:2px solid var(--line);border-radius:12px;background:white;padding:12px 14px;color:var(--ink)}.hidden{display:none!important}.row{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--muted);font-size:14px;font-weight:650}.bar{height:10px;background:#f3e5d1;border-radius:99px;overflow:hidden;margin:12px 0 30px}.fill{height:100%;width:0;background:var(--accent);transition:width .25s}h2{font-size:clamp(20px,4vw,27px);line-height:1.36;margin:0 0 24px}.answers{display:grid;gap:11px}.answer{text-align:left;display:flex;align-items:center;gap:14px;width:100%;font-weight:520;line-height:1.35;padding:16px}.letter{display:grid;place-items:center;flex:0 0 32px;height:32px;border-radius:9px;background:#f8e5c8;color:#9b652f;font-weight:800}.answer.chosen{border-color:var(--accent);background:#fff0d9}.answer.correct{border-color:var(--good);background:#e5f4e9}.answer.wrong{border-color:var(--bad);background:#fbe9e7}.feedback{margin:18px 0 0;line-height:1.5;font-weight:600}.feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}.bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:28px}.small{color:var(--muted);font-size:13px}.score{font-size:52px;color:#ce7b2f;font-weight:800;text-align:center;margin:15px 0 5px}.center{text-align:center}.review{margin-top:22px;max-height:330px;overflow:auto;text-align:left}.review-item{padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}.review-item strong{display:block;margin-bottom:5px}footer{margin:25px auto;text-align:center;color:#8a735c;font-size:12px;max-width:650px;line-height:1.5}@media(max-width:500px){main{margin-top:20px}.bagels{font-size:48px}.panel{border-radius:18px}.bottom{flex-direction:column-reverse;align-items:stretch}.bottom button{width:100%}}
 </style></head><body><main><header class="top"><div class="bagels" aria-hidden="true">🥯🥯🥯</div><h1>Bagel Quiz!</h1><div class="subtitle">Anatomia • sprawdź, ile pamiętasz</div></header>
-<section class="panel" id="start"><h2 class="center">Gotowy na quiz?</h2><p class="center">Pytania na podstawie przesłanego notatnika z anatomii. Wybierz długość zestawu i rozpocznij.</p><div class="controls"><label for="count">Liczba pytań:</label><select id="count"><option value="10">10 pytań</option><option value="20">20 pytań</option><option value="all">Wszystkie pytania</option></select></div><div class="center"><button class="primary" id="startBtn">Rozpocznij quiz →</button></div></section>
+<section class="panel" id="start"><h2 class="center">Gotowy na quiz?</h2><p class="center">Pytania na podstawie przesłanego notatnika z anatomii. Niejasne lub błędnie sformułowane pozycje z PDF-a zostały wyłączone z punktowanego quizu. Wybierz długość zestawu i rozpocznij.</p><div class="controls"><label for="count">Liczba pytań:</label><select id="count"><option value="10">10 pytań</option><option value="20">20 pytań</option><option value="all">Wszystkie sprawdzone pytania (99)</option></select></div><div class="center"><button class="primary" id="startBtn">Rozpocznij quiz →</button></div></section>
 <section class="panel hidden" id="play" aria-live="polite"><div class="row"><span id="number"></span><span id="points"></span></div><div class="bar"><div id="fill" class="fill"></div></div><h2 id="question"></h2><div id="answers" class="answers"></div><div class="feedback hidden" id="feedback"></div><p id="sourceNote" class="small hidden"></p><div class="bottom"><span class="small">Zaznacz jedną odpowiedź</span><button id="next" class="primary" disabled>Następne pytanie →</button></div></section>
 <section class="panel hidden center" id="finish"><h2>Koniec quizu! 🎉</h2><div id="finalScore" class="score"></div><p id="summary"></p><div class="controls"><button class="primary" id="again">Zagraj ponownie</button><button id="reviewBtn">Pokaż błędy</button></div><div id="review" class="review hidden"></div></section>
 <script>
@@ -62,9 +62,9 @@ const BANK = [
     "q": "Do podwzgorza zaliczamy",
     "a": [
       "Wszystkie wymienione (Ciała suteczkowate, guz popielaty, skrzyzowanie wzrokowe, lejek)",
-      "Tylko lejek",
-      "Tylko ciała suteczkowate",
-      "Tylko skrzyżowanie wzrokowe"
+      "Ciała suteczkowate, wzgórze, most, lejek",
+      "Guz popielaty, ciało modzelowate, most, lejek",
+      "Ciała suteczkowate, móżdżek, skrzyżowanie wzrokowe, lejek"
     ],
     "correct": 0
   },
@@ -96,7 +96,8 @@ const BANK = [
       "III–VI",
       "I–XII"
     ],
-    "correct": 0
+    "correct": 0,
+    "excluded": "Opis wyjścia nerwów czaszkowych z powierzchni brzusznej jest zbyt ogólny."
   },
   {
     "q": "Bruzda Srodkowa oddziela platy",
@@ -202,9 +203,9 @@ const BANK = [
     "q": "Przez otwór zyły szyjnej przechodzi nerw",
     "a": [
       "wszystkie wymienione (językowo gardlowy, blędny, dodatkowy)",
-      "Tylko nerw błędny",
-      "Tylko nerw dodatkowy",
-      "Tylko nerw językowo-gardłowy"
+      "Nerwy okoruchowy, bloczkowy i odwodzący",
+      "Nerwy twarzowy, przedsionkowo-ślimakowy i podjęzykowy",
+      "Nerwy językowo-gardłowy, błędny i podjęzykowy"
     ],
     "correct": 0
   },
@@ -226,7 +227,8 @@ const BANK = [
       "Zwolnieniu pracy serca",
       "Zwiększeniu wydzielania śliny"
     ],
-    "correct": 0
+    "correct": 0,
+    "excluded": "Sformułowanie o naczyniach „wiercowych” jest niejednoznaczne."
   },
   {
     "q": "Splot szyjny powstaje z galęzi",
@@ -252,12 +254,11 @@ const BANK = [
     "q": "Nerwem splotu ramiennego nie jest nerw",
     "a": [
       "Wszystkie wymienione są (mięśniowo- skośny, promieniowy, łokciowy, pachowy)",
-      "Nerw udowy",
-      "Nerw kulszowy",
-      "Nerw zasłonowy"
+      "Nerw mięśniowo-skórny",
+      "Nerw promieniowy",
+      "Nerw łokciowy"
     ],
-    "correct": 0,
-    "note": "W notatkach odpowiedź jest opisowa i nie odpowiada wprost konstrukcji pytania."
+    "correct": 0
   },
   {
     "q": "Układ wewnątrzwydzielniczy tworzą gruczoły z wyjątkiem",
@@ -267,7 +268,8 @@ const BANK = [
       "Tarczyca",
       "Przytarczyce"
     ],
-    "correct": 0
+    "correct": 0,
+    "excluded": "Nerki również pełnią funkcje hormonalne; pytanie nie jest jednoznaczne."
   },
   {
     "q": "Gruczol tarczowy przykryty jest mięśniami",
@@ -338,7 +340,7 @@ const BANK = [
       "Wyłącznie I i II"
     ],
     "correct": 0,
-    "note": "W notatkach pominięto lub powtórzono niektóre numery nerwów."
+    "excluded": "W notatkach powtórzono numery nerwów i lista jest niepełna."
   },
   {
     "q": "Co unerwia gałąż- struna bębenkowa ?",
@@ -549,7 +551,7 @@ const BANK = [
       "Odśrodkowa biegnie od receptora do ośrodka"
     ],
     "correct": 0,
-    "note": "Odpowiedź w notatkach opisuje tylko drogę dośrodkową."
+    "excluded": "Podana odpowiedź wyjaśnia jedynie drogę dośrodkową."
   },
   {
     "q": "Które nerwy jako jedyne nie ulegają skrzyżowaniu?",
@@ -559,7 +561,8 @@ const BANK = [
       "Nerwy bloczkowe IV",
       "Nerwy dodatkowe XI"
     ],
-    "correct": 0
+    "correct": 0,
+    "excluded": "Sformułowanie „jako jedyne” jest za mocne i niejednoznaczne."
   },
   {
     "q": "Jaki jest najważniejszy nerw czuciowy twarzy?",
@@ -579,7 +582,8 @@ const BANK = [
       "Nerw podjęzykowy XII",
       "Nerw bloczkowy IV"
     ],
-    "correct": 0
+    "correct": 0,
+    "excluded": "Nie ma jednego, obiektywnie „najważniejszego” nerwu ruchowego."
   },
   {
     "q": "Jak jest unerwiony język?",
@@ -630,7 +634,7 @@ const BANK = [
       "Droga autonomiczna trzewna"
     ],
     "correct": 0,
-    "note": "W notatkach błędnie utożsamiono drogę piramidową z drogą czucia świadomego."
+    "excluded": "W źródle drogę piramidową błędnie opisano jako drogę czucia świadomego."
   },
   {
     "q": "Oksytocyna- co powoduje?",
@@ -651,7 +655,7 @@ const BANK = [
       "Wyłącznie rdzeń przedłużony"
     ],
     "correct": 0,
-    "note": "W notatkach wymieniono rdzeń przedłużony, który nie należy do tyłomózgowia wtórnego."
+    "excluded": "W źródle pomylono tyłomózgowie wtórne z rdzeniomózgowiem."
   },
   {
     "q": ".Trójneuronowe drogi to..?",
@@ -692,7 +696,7 @@ const BANK = [
       "Grasica nie uczestniczy w dojrzewaniu limfocytów T"
     ],
     "correct": 0,
-    "note": "Pytanie w notatkach nie ma pełnej treści."
+    "excluded": "Pytanie jest niekompletne w PDF-ie."
   },
   {
     "q": "do czego należy oliwka oraz piramidy ?",
@@ -723,7 +727,7 @@ const BANK = [
       "Kresomózgowie, most, rdzeń przedłużony"
     ],
     "correct": 0,
-    "note": "W notatkach błędnie do pnia mózgu zaliczono móżdżek."
+    "excluded": "W źródle błędnie zaliczono móżdżek do pnia mózgu."
   },
   {
     "q": "Jakie płaty przykrywają wyspe?",
@@ -813,7 +817,8 @@ const BANK = [
       "Ucho zewnętrzne",
       "Trąbka słuchowa"
     ],
-    "correct": 0
+    "correct": 0,
+    "excluded": "Błona bębenkowa stanowi granicę ucha zewnętrznego i środkowego; wymaga doprecyzowania."
   },
   {
     "q": "Hormony przedniego płata przysadki?",
@@ -834,7 +839,7 @@ const BANK = [
       "Wyłącznie przepona siodła"
     ],
     "correct": 0,
-    "note": "Odpowiedź z notatek wymienia struktury, które właśnie należą do wypustek opony twardej."
+    "excluded": "Pytanie ma odpowiedź sprzeczną z jego przeczeniem „nie należy”."
   },
   {
     "q": "Skąd wychodzi opona twarda z mózgowia?",
@@ -844,7 +849,8 @@ const BANK = [
       "Z jamy nosowej przez blaszkę sitową",
       "Z oczodołu przez szczelinę oczodołową górną"
     ],
-    "correct": 0
+    "correct": 0,
+    "excluded": "Pytanie o „wychodzenie opony twardej z mózgowia” jest nieprecyzyjne."
   },
   {
     "q": "Gdzie leżą jądra dróg współczulnych?",
@@ -996,9 +1002,9 @@ const BANK = [
     "q": "Prawidłowe działanie układu przywspółczulnego polega na",
     "a": [
       "skurczu miesni oskrzeli",
-      "Lędźwiowego 1,2",
-      "C8-L2",
-      "C1-C4"
+      "rozszerzeniu źrenic",
+      "przyspieszeniu czynności serca",
+      "rozkurczu oskrzeli"
     ],
     "correct": 0
   },
@@ -1078,7 +1084,7 @@ const BANK = [
       "przyśrodkowego"
     ],
     "correct": 1,
-    "note": "W źródle zachowały się tylko trzy warianty odpowiedzi."
+    "excluded": "W PDF-ie użyto słowa „pęcherzyka” zamiast „pęczka”; brakuje części oryginalnych wariantów."
   },
   {
     "q": "Splot ramienny powstaje z gałęzi",
@@ -1183,7 +1189,7 @@ const BANK = [
 const $=id=>document.getElementById(id);let deck=[],pos=0,score=0,chosen=null,mistakes=[];
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 function show(which){['start','play','finish'].forEach(id=>$(id).classList.toggle('hidden',id!==which))}
-function begin(){let n=$('count').value;deck=shuffle(BANK).slice(0,n==='all'?BANK.length:Number(n)).map(q=>{let opts=shuffle(q.a.map((text,i)=>({text,correct:i===q.correct})));return {...q,opts}});pos=0;score=0;mistakes=[];show('play');render()}
+function begin(){let n=$('count').value;deck=shuffle(BANK.filter(q=>!q.excluded)).slice(0,n==='all'?BANK.filter(q=>!q.excluded).length:Number(n)).map(q=>{let opts=shuffle(q.a.map((text,i)=>({text,correct:i===q.correct})));return {...q,opts}});pos=0;score=0;mistakes=[];show('play');render()}
 function render(){chosen=null;const q=deck[pos];$('number').textContent=`Pytanie ${pos+1} z ${deck.length}`;$('points').textContent=`Punkty: ${score}`;$('fill').style.width=`${pos/deck.length*100}%`;$('question').textContent=q.q;$('next').disabled=true;$('next').textContent=pos===deck.length-1?'Zobacz wynik →':'Następne pytanie →';$('feedback').className='feedback hidden';$('sourceNote').textContent=q.note?'Uwaga o źródle: '+q.note:'';$('sourceNote').classList.toggle('hidden',!q.note);$('answers').replaceChildren();q.opts.forEach((op,i)=>{const btn=document.createElement('button');btn.className='answer';btn.innerHTML=`<span class="letter">${'ABCDE'[i]}</span>`;const text=document.createElement('span');text.textContent=op.text;btn.append(text);btn.addEventListener('click',()=>pick(i));$('answers').append(btn)})}
 function pick(i){if(chosen!==null)return;chosen=i;const q=deck[pos],correct=q.opts[i].correct;score+=Number(correct);if(!correct)mistakes.push({question:q.q,yours:q.opts[i].text,right:q.opts.find(x=>x.correct).text});const btns=[...$('answers').children];btns.forEach((b,j)=>{b.disabled=true;if(q.opts[j].correct)b.classList.add('correct');else if(j===i)b.classList.add('wrong')});$('points').textContent=`Punkty: ${score}`;$('feedback').textContent=correct?'Świetnie! Poprawna odpowiedź.':`Poprawna odpowiedź: ${q.opts.find(x=>x.correct).text}`;$('feedback').className='feedback '+(correct?'ok':'no');$('next').disabled=false}
 function advance(){if(chosen===null)return;if(++pos<deck.length)render();else finish()}
