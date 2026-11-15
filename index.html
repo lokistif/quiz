@@ -1,72 +1,540 @@
-<!doctype html>
-<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f8e7c4"><title>Bagel Quiz — anatomia</title>
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bagel Quiz – Anatomia</title>
+
 <style>
-:root{--ink:#473629;--muted:#88745f;--bg:#fffaf0;--card:#fffdf8;--accent:#df8c43;--accent2:#ffecd1;--line:#edd7b8;--good:#317655;--bad:#a64545}*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);min-height:100vh;background:linear-gradient(90deg,#f4dcae55 50%,transparent 50%) 0 0/56px 56px,linear-gradient(#f4dcae55 50%,transparent 50%) 0 0/56px 56px,var(--bg)}main{width:min(740px,calc(100% - 30px));margin:40px auto 70px}.top{text-align:center;margin-bottom:22px}.bagels{font-size:64px;letter-spacing:12px;filter:drop-shadow(0 5px 2px #8c633029)}h1{font-size:clamp(35px,7vw,57px);margin:2px 0;color:#d98637;letter-spacing:2px}.subtitle{color:var(--muted);font-size:15px}.panel{background:var(--card);border:2px solid var(--line);border-radius:23px;padding:clamp(20px,4vw,38px);box-shadow:0 10px 32px #6b49191a}.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;margin:20px 0}button,select{font:inherit}button{cursor:pointer;border-radius:14px;border:2px solid var(--line);padding:13px 18px;background:white;color:var(--ink);font-weight:650;transition:transform .12s,background .12s}button:hover:not(:disabled){transform:translateY(-1px);background:#fff1dc}button:disabled{opacity:.55;cursor:default}.primary{background:var(--accent);color:white;border-color:var(--accent)}.primary:hover:not(:disabled){background:#c87530}select{border:2px solid var(--line);border-radius:12px;background:white;padding:12px 14px;color:var(--ink)}.hidden{display:none!important}.row{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--muted);font-size:14px;font-weight:650}.bar{height:10px;background:#f3e5d1;border-radius:99px;overflow:hidden;margin:12px 0 30px}.fill{height:100%;width:0;background:var(--accent);transition:width .25s}h2{font-size:clamp(20px,4vw,27px);line-height:1.36;margin:0 0 24px}.answers{display:grid;gap:11px}.answer{text-align:left;display:flex;align-items:center;gap:14px;width:100%;font-weight:520;line-height:1.35;padding:16px}.letter{display:grid;place-items:center;flex:0 0 32px;height:32px;border-radius:9px;background:#f8e5c8;color:#9b652f;font-weight:800}.answer.chosen{border-color:var(--accent);background:#fff0d9}.answer.correct{border-color:var(--good);background:#e5f4e9}.answer.wrong{border-color:var(--bad);background:#fbe9e7}.feedback{margin:18px 0 0;line-height:1.5;font-weight:600}.feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}.bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:28px}.small{color:var(--muted);font-size:13px}.score{font-size:52px;color:#ce7b2f;font-weight:800;text-align:center;margin:15px 0 5px}.center{text-align:center}.review{margin-top:22px;max-height:330px;overflow:auto;text-align:left}.review-item{padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}.review-item strong{display:block;margin-bottom:5px}footer{margin:25px auto;text-align:center;color:#8a735c;font-size:12px;max-width:650px;line-height:1.5}@media(max-width:500px){main{margin-top:20px}.bagels{font-size:48px}.panel{border-radius:18px}.bottom{flex-direction:column-reverse;align-items:stretch}.bottom button{width:100%}}
-</style></head><body><main><header class="top"><div class="bagels" aria-hidden="true">🥯🥯🥯</div><h1>Bagel Quiz!</h1><div class="subtitle">Anatomia • sprawdź, ile pamiętasz</div></header>
-<section class="panel" id="start"><h2 class="center">Gotowy na quiz?</h2><p class="center">Pytania na podstawie przesłanego notatnika z anatomii. Niejasne lub błędnie sformułowane pozycje z PDF-a zostały wyłączone z punktowanego quizu. Wybierz długość zestawu i rozpocznij.</p><div class="controls"><label for="count">Liczba pytań:</label><select id="count"><option value="10">10 pytań</option><option value="20">20 pytań</option><option value="all">Wszystkie sprawdzone pytania (99)</option></select></div><div class="center"><button class="primary" id="startBtn">Rozpocznij quiz →</button></div></section>
-<section class="panel hidden" id="play" aria-live="polite"><div class="row"><span id="number"></span><span id="points"></span></div><div class="bar"><div id="fill" class="fill"></div></div><h2 id="question"></h2><div id="answers" class="answers"></div><div class="feedback hidden" id="feedback"></div><p id="sourceNote" class="small hidden"></p><div class="bottom"><span class="small">Zaznacz jedną odpowiedź</span><button id="next" class="primary" disabled>Następne pytanie →</button></div></section>
-<section class="panel hidden center" id="finish"><h2>Koniec quizu! 🎉</h2><div id="finalScore" class="score"></div><p id="summary"></p><div class="controls"><button class="primary" id="again">Zagraj ponownie</button><button id="reviewBtn">Pokaż błędy</button></div><div id="review" class="review hidden"></div></section>
+:root {
+  --bg: #fffaf0;
+  --card: #fffdf8;
+  --text: #473629;
+  --accent: #df8c43;
+  --border: #edd7b8;
+  --green: #317655;
+  --red: #a64545;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+main {
+  max-width: 750px;
+  padding: 20px 15px;
+  margin: 20px auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h1 {
+  color: var(--accent);
+  font-size: clamp(35px, 7vw, 55px);
+  margin: 5px 0;
+}
+
+.subtitle { color: #88745f; }
+
+.bagels { font-size: 55px; }
+
+.panel {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 10px 30px #6b49191a;
+}
+
+.hidden { display: none !important; }
+
+button, select {
+  font: inherit;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 17px;
+}
+
+button {
+  background: white;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover:not(:disabled) {
+  background: #fff1dc;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.primary:hover:not(:disabled) {
+  background: #c87530;
+  color: white;
+}
+
+.center { text-align: center; }
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 25px 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.bar {
+  height: 10px;
+  background: #f3e5d1;
+  border-radius: 20px;
+  margin: 15px 0 28px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: var(--accent);
+  width: 0%;
+  transition: width .3s;
+}
+
+#question {
+  font-size: 24px;
+  line-height: 1.4;
+  margin-bottom: 25px;
+}
+
+.answers {
+  display: grid;
+  gap: 12px;
+}
+
+.answer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  gap: 12px;
+  padding: 16px;
+  line-height: 1.4;
+}
+
+.letter {
+  background: #f8e5c8;
+  color: #9b652f;
+  padding: 8px 12px;
+  border-radius: 9px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.answer.correct {
+  background: #e5f4e9;
+  border-color: var(--green);
+}
+
+.answer.wrong {
+  background: #fbe9e7;
+  border-color: var(--red);
+}
+
+.feedback {
+  margin-top: 20px;
+  font-weight: 600;
+}
+
+.feedback.ok { color: var(--green); }
+.feedback.no { color: var(--red); }
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 28px;
+}
+
+.score {
+  font-size: 55px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.review {
+  text-align: left;
+  margin-top: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.review-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.review-item strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+footer {
+  text-align: center;
+  color: #88745f;
+  font-size: 12px;
+  margin-top: 30px;
+}
+
+@media(max-width: 500px) {
+  .panel { padding: 20px; }
+  #question { font-size: 21px; }
+  .bottom { flex-direction: column; }
+  .bottom button { width: 100%; }
+}
+</style>
+</head>
+
+<body>
+<main>
+
+<header>
+  <div class="bagels">🥯🥯🥯</div>
+  <h1>Bagel Quiz!</h1>
+  <div class="subtitle">Anatomia – układ oddechowy</div>
+</header>
+
+<section class="panel" id="start">
+  <h2 class="center">Gotowy na quiz?</h2>
+  <p class="center">
+    Sprawdź swoją wiedzę z anatomii układu oddechowego!
+  </p>
+
+  <div class="controls">
+    <label for="count">Liczba pytań:</label>
+    <select id="count">
+      <option value="10">10 pytań</option>
+      <option value="20">20 pytań</option>
+      <option value="all">Wszystkie pytania (35)</option>
+    </select>
+  </div>
+
+  <div class="center">
+    <button class="primary" id="startBtn">
+      Rozpocznij quiz →
+    </button>
+  </div>
+</section>
+
+<section class="panel hidden" id="play">
+  <div class="row">
+    <span id="number"></span>
+    <span id="points"></span>
+  </div>
+
+  <div class="bar">
+    <div class="fill" id="fill"></div>
+  </div>
+
+  <h2 id="question"></h2>
+
+  <div id="answers" class="answers"></div>
+
+  <div id="feedback" class="feedback hidden"></div>
+
+  <div class="bottom">
+    <span>Wybierz jedną odpowiedź</span>
+    <button class="primary" id="next" disabled>
+      Następne pytanie →
+    </button>
+  </div>
+</section>
+
+<section class="panel hidden center" id="finish">
+  <h2>Koniec quizu! 🎉</h2>
+
+  <div id="finalScore" class="score"></div>
+  <p id="summary"></p>
+
+  <div class="controls">
+    <button class="primary" id="again">
+      Zagraj ponownie
+    </button>
+    <button id="reviewBtn">
+      Pokaż błędy
+    </button>
+  </div>
+
+  <div id="review" class="review hidden"></div>
+</section>
+
+<footer>
+  Bagel Quiz • Anatomia • Układ oddechowy
+</footer>
+
+</main>
+
 <script>
 const BANK = [
-  {"q":"komórki sitowe tylne uchodzą do przewodu nosowego","a":["górnego","środkowego","dolnego","przedniego"],"correct":0},
-  {"q":"Do jamy nosowej nie uchodzą zatoki","a":["szczękowa","czołowa","klinowa","żadna z wymienionych"],"correct":3},
-  {"q":"chrząstką która jest w nosie haczykowo zagięta jest chrząstka","a":["przegrody nosa","chrzastka boczna","skrzydłowa większa","skrzydłowa mniejsza"],"correct":2},
-  {"q":"krtań leży na poziomie kręgu","a":["1 - 3 szyjnego","1 - 5 szyjnego","4 - 7 szyjnego","1 - 3 piersiowego"],"correct":2},
-  {"q":"więzadła głosowe krtani rozpięte są między chrząstkami","a":["rózkowatą a tarczowatą","różkowatą a nalewkowatą","tarczowatą a nagłosniową","nalewkowatymi a tarczowatą"],"correct":3},
-  {"q":"podporą nagłośni jest chrząstka","a":["pierscieniowata","nagłośniowa","tarczowata","nalewkowa"],"correct":2},
-  {"q":"szpary nagłośni rozwiera mięsień","a":["pierścienno-nalewkowy tylny","pierścienno-nalewkowy boczny","tarczowo-nalewkowy","nalewkowy"],"correct":0},
-  {"q":"w nosie nie wyróżniamy chrząstki","a":["przegrody nosa","chrząstki bocznej","skrzydłowej większej","wszystkie wymienione chrząstki występują w nosie"],"correct":3},
-  {"q":"tchawica sięga ku dołowi rozdwajając się na wysokości kręgu piersiowego","a":["Th1/Th2","Th2/Th3","Th4/Th5","Th6/Th7"],"correct":2},
-  {"q":"najbardziej do przodu we wnęce pluca lezy","a":["oskrzele","Żyła plucna górna","zyła plucna dolna","tetnica płucna"],"correct":1},
-  {"q":"krtań ma długość","a":["10 cm","4-6 cm","8-9 cm","2-3 cm"],"correct":1},
-  {"q":"szczelina płucna pozioma oddziela","a":["płat górny i dolny płuca prawego","płat górny i dolny płuca lewego","płat górny i środkowy płuca prawego","płat górny i środkowy płuca lewego"],"correct":2},
-  {"q":"szczelina płucna skośna oddziela","a":["plat górny i dolny płuca prawego","płat górny i dolny płuca lewego","płat górny i środkowy płuca prawego","A i B prawda"],"correct":3},
-  {"q":"w płucach wyróżniamy segmenty oskrzelowo-płucne w ilości","a":["razem w prawym i lewym płucu 10 segmentów","8 segmentów w prawym i 10 w lewym","10 w prawym i 10 w lewym","8 w prawym i 8 w lewym"],"correct":2},
-  {"q":"na nosie zewnętrznym nie wyróżniamy","a":["skrzydeł nosa","grzbietu","powierzchni bocznych","małżowiny nosowej dolnej"],"correct":3},
-  {"q":"granica między śródpiersiem górnym i dolnym znajduje się na wysokości kręgu piersiowego","a":["Th1","Th2","Th3","Th4/Th5"],"correct":3},
-  {"q":"jama opłucnej znajduje się pomiędzy oplucną","a":["Ścienną a trzewną","żebrową a przeponową","przeponową a śródpiersiową","zebrową a sródpiersiową"],"correct":0},
-  {"q":"Oskrzela oddechowe po dwukrotnym podziale przechodzą w","a":["Przewodziki pęcherzykowe","pęcherzyki płucne","oskrzela podsegmentowe","oskrzela segmentowe"],"correct":0},
-  {"q":"korzeń płuca stanowi","a":["Oskrzela","żyła płucna Górna","tetnica płucna","wszystkie powyższe"],"correct":3},
-  {"q":"umowna granica dzieląca drogi oddechowe na górne i dolne przebiega na wysokości","a":["łuku aorty","zębów trzonowych","krẹgu th4/TH5","fałdów głosowych"],"correct":3},
-
-  {"q":"Opłucna co to jest-zaznaczyć poprawne?","a":["jest to błona surowicza, mamy opłucną ścienną i opłucną płucną lub trzewną","jest to błona śluzowa wyściełająca oskrzela","jest to błona otaczająca wyłącznie tchawicę","jest to warstwa mięśniowa ściany klatki piersiowej"],"correct":0},
-  {"q":"Co ogranicza nagłośnie i gdzie ona ležy?","a":["ogranicza ona od góry wejście do krtani, leży do tyłu od nasady jeżyka i kości gnykowej","ogranicza od dołu wejście do tchawicy, leży przed mostkiem","ogranicza wejście do oskrzela prawego, leży poniżej tchawicy","ogranicza wejście do jamy nosowej, leży nad podniebieniem"],"correct":0},
-  {"q":"Największa zatoka to..?","a":["zatoka szczękowa","zatoka czołowa","zatoka klinowa","zatoka sitowa"],"correct":0},
-  {"q":"Jabłko Adama- jaka chrząstka powoduje tą wyniosłość krtaniową?","a":["Chrzastka tarczowata","chrząstka pierścieniowata","chrząstka nagłośniowa","chrząstka nalewkowata"],"correct":0},
-  {"q":"Jaki jest przebieg oddychania?","a":["jama nosowa->gardło->krtań->tchawica->oskrzela->oskrzeliki","jama nosowa->krtań->gardło->tchawica->oskrzela->oskrzeliki","jama nosowa->gardło->tchawica->krtań->oskrzela->oskrzeliki","jama nosowa->gardło->krtań->oskrzeliki->oskrzela->tchawica"],"correct":0},
-  {"q":"Co i gdzie odprowadza natlenowaną krew z płuc?","a":["Zz. Płucne odprowadzają natlenowaną krew do lewego przedsionka.","Tętnice płucne odprowadzają natlenowaną krew do prawego przedsionka.","Żyły płucne odprowadzają natlenowaną krew do prawej komory.","Tętnice oskrzelowe odprowadzają natlenowaną krew do lewego przedsionka."],"correct":0},
-  {"q":"Najmniejsza autonomiczna struktura płuca?","a":["grono","segment oskrzelowo-płucny","płat płuca","oskrzele główne"],"correct":0},
-  {"q":"Czym jest małžowina dolna nosa?","a":["jest oddzielną kością","jest częścią kości sitowej","jest częścią kości klinowej","jest chrząstką przegrody nosa"],"correct":0},
-  {"q":"Gdzie znajduje się szczelina pozioma płuca?","a":["w prawym płucu, pomiędzy płatem górnym a stodktroma. razem ze szczęliną škośną dzieli równiež na plat dolny.","w lewym płucu, pomiędzy płatem górnym a dolnym","w prawym płucu, pomiędzy płatem środkowym a dolnym","w obu płucach, pomiędzy płatem górnym a dolnym"],"correct":0},
-
-  {"q":"W jamie nosowej wyróżniamy małżowiny nosowe","a":["lewą, prawą, dolną","boczną, pośrodkową, przyśrodkową","przednią, srodkową, dolną","górną, środkową, dolną"],"correct":3},
-  {"q":"Do jamy nosowej nie uchodzą zatoki","a":["szczękowa","czołowa","komórki sitowe przednie","żadna z wymienionych"],"correct":3},
-  {"q":"Otwór dolnej przewodu nosowo-łzowego znajduje się w","a":["przewodzie nosowym dolnym","przewodzie nosowym górnym","przewodzie nosowym środkowym","przewodzie nosowym przednim"],"correct":0},
-  {"q":"krtań leży na poziomie kręgu","a":["I-III szyjnego","I-V szyjnego","IV-VII szyjnego","I-III piersiowego"],"correct":2},
-  {"q":"Więzadła głosowe krtani rozpięte są między chrząstkami","a":["różkowatą,a tarczowata","różowatą, a nalewkowatą","tarczowatą, a nagłosniową","nalewkowatymi, a tarczowatą"],"correct":3},
-  {"q":"Podporą nagłośni jest chrząstka","a":["pierścieniowata","nagłośniowa","tarczowata","nalewkowa"],"correct":2},
-  {"q":"Szparę głośni rozwiera mięsień","a":["Pierścienno-nalwekowy tylny","pierScienno-nalewkowy boczny","tarczowo-nalewkowy","nalewkowy"],"correct":0},
-  {"q":"Prawdą jest, že oskrzele prawe jest","a":["dłuższe od lewego","ma węższe światło niż lewe","przebiega bardziej poziomo niż lewe","A,B,C fałszywe"],"correct":3},
-  {"q":"Tchawica sięga ku dołowi rozdwajając się na wysokości kręgu piersiowego","a":["Th1/tH2","Th2/Th3","Th4/Th5","Th6/Th7"],"correct":2},
-  {"q":"Najbardziej do przodu we wnęce płuca leży","a":["oskrzele","żyła płucna górna","żyła płucna dolna","tetnica plucna"],"correct":1},
-  {"q":"Najbardziej do dołu we wnęce płuca leży","a":["oskrzele","Zyła płucna górna","żyła płucna dolna","tętnica plucna"],"correct":2},
-  {"q":"Szczelina płucna pozioma oddziela","a":["płat górny i dolny płuca prawego","płat górny i dolny płuca lewego","płat górny i środkowy płuca prawego","płat górny i środkowy płuca lewego"],"correct":2},
-  {"q":"Szczelina płucna skośna oddziela","a":["Płat górny i dolny płuca prawego","płat górny i dolny płuca lewego","Płat górny i Środkowy płuca prawego","A i B prawdziwe"],"correct":3},
-  {"q":"w płucach wyróżniamy segmenty oskrzelowo-płucne w ilości","a":["razem w lewym i prawym płucu 10 segmentów","8 w płucu prawym i 10 w lewym","10 w prawym i 10 w lewym","8 w prawym 8 w lewym"],"correct":2},
-  {"q":"opłucną ścienną nie tworzy opłucna","a":["Żebrowa","trzewna","przeponowa","Śródpiersiowa"],"correct":1},
-  {"q":"Graanica między śródpiersiem górnym i dolnym znajduje się na wysokości kręgu piersiowego","a":["Th1","Th2","Th3","Th4/Th5"],"correct":3},
-  {"q":"Jama opłucnej znajduje się między opłucną","a":["Ścienną, a trzewną","Zebrową, a przeponową","przeponową, Sródpiersiową","Żebrową, a śródpiersiową"],"correct":0},
-  {"q":"Oskrzelka oddechowe po dwukrotnym podziale przechodzą w","a":["przewodziki pęcherzykowe","pęcherzyki płucne","oskrzela podsegmentowe","oskrzela segmentowe"],"correct":0},
-  {"q":"Korzeń płuca stanowi","a":["oskrzele","żyła płucna górna","żyła płucna dolna","wszystkie wymienione"],"correct":3},
-  {"q":"unerwienie krtani pochodzi z gałęzi nerwu","a":["dodatkowego","błednego","przeponowego","językowo-gardłowego"],"correct":1}
+{"q":"komórki sitowe tylne uchodzą do przewodu nosowego","a":["górnego","środkowego","dolnego","przedniego"],"correct":0},
+{"q":"Do jamy nosowej nie uchodzą zatoki","a":["szczękowa","czołowa","klinowa","żadna z wymienionych"],"correct":3},
+{"q":"chrząstką która jest w nosie haczykowo zagięta jest chrząstka","a":["przegrody nosa","chrzastka boczna","skrzydłowa większa","skrzydłowa mniejsza"],"correct":2},
+{"q":"krtań leży na poziomie kręgu","a":["1 - 3 szyjnego","1 - 5 szyjnego","III-VI szyjnego","1 - 3 piersiowego"],"correct":2},
+{"q":"więzadła głosowe krtani rozpięte są między chrząstkami","a":["rózkowatą a tarczowatą","różkowatą a nalewkowatą","tarczowatą a nagłosniową","nalewkowatymi a tarczowatą"],"correct":3},
+{"q":"podporą nagłośni jest chrząstka","a":["pierscieniowata","nagłośniowa","tarczowata","nalewkowa"],"correct":2},
+{"q":"szparę głośni rozwiera mięsień","a":["pierścienno-nalewkowy tylny","pierścienno-nalewkowy boczny","tarczowo-nalewkowy","nalewkowy"],"correct":0},
+{"q":"w nosie nie wyróżniamy chrząstki","a":["przegrody nosa","chrząstki bocznej","skrzydłowej większej","wszystkie wymienione chrząstki występują w nosie"],"correct":3},
+{"q":"tchawica sięga ku dołowi rozdwajając się na wysokości kręgu piersiowego","a":["Th1/Th2","Th2/Th3","Th4/Th5","Th6/Th7"],"correct":2},
+{"q":"najbardziej do przodu we wnęce pluca lezy","a":["oskrzele","Żyła plucna górna","zyła plucna dolna","tetnica płucna"],"correct":1},
+{"q":"krtań ma długość","a":["10 cm","4-6 cm","8-9 cm","2-3 cm"],"correct":1},
+{"q":"szczelina płucna pozioma oddziela","a":["płat górny i dolny płuca prawego","płat górny i dolny płuca lewego","płat górny i środkowy płuca prawego","płat górny i środkowy płuca lewego"],"correct":2},
+{"q":"szczelina płucna skośna oddziela","a":["plat górny i dolny płuca prawego","płat górny i dolny płuca lewego","płat górny i środkowy płuca prawego","A i B prawda"],"correct":3},
+{"q":"w płucach wyróżniamy segmenty oskrzelowo-płucne w ilości","a":["razem w prawym i lewym płucu 10 segmentów","8 segmentów w prawym i 10 w lewym","10 w prawym i zwykle 8-10 w lewym","8 w prawym i 8 w lewym"],"correct":2},
+{"q":"na nosie zewnętrznym nie wyróżniamy","a":["skrzydeł nosa","grzbietu","powierzchni bocznych","małżowiny nosowej dolnej"],"correct":3},
+{"q":"granica między śródpiersiem górnym i dolnym znajduje się na wysokości kręgu piersiowego","a":["Th1","Th2","Th3","Th4/Th5"],"correct":3},
+{"q":"jama opłucnej znajduje się pomiędzy oplucną","a":["Ścienną a trzewną","żebrową a przeponową","przeponową a śródpiersiową","zebrową a sródpiersiową"],"correct":0},
+{"q":"Oskrzela oddechowe po dwukrotnym podziale przechodzą w","a":["Przewodziki pęcherzykowe","pęcherzyki płucne","oskrzela podsegmentowe","oskrzela segmentowe"],"correct":0},
+{"q":"korzeń płuca stanowi","a":["Oskrzela","żyła płucna Górna","tetnica płucna","wszystkie wymienione: oskrzele, żyły płucne i tętnica płucna"],"correct":3},
+{"q":"umowna granica dzieląca drogi oddechowe na górne i dolne przebiega na wysokości","a":["łuku aorty","zębów trzonowych","krẹgu th4/TH5","fałdów głosowych"],"correct":3},
+{"q":"Opłucna co to jest-zaznaczyć poprawne?","a":["jest to błona surowicza, mamy opłucną ścienną i opłucną płucną lub trzewną","jest to błona śluzowa wyściełająca oskrzela","jest to błona otaczająca wyłącznie tchawicę","jest to warstwa mięśniowa ściany klatki piersiowej"],"correct":0},
+{"q":"Co ogranicza nagłośnie i gdzie ona ležy?","a":["ogranicza ona od góry wejście do krtani, leży do tyłu od nasady jeżyka i kości gnykowej","ogranicza od dołu wejście do tchawicy, leży przed mostkiem","ogranicza wejście do oskrzela prawego, leży poniżej tchawicy","ogranicza wejście do jamy nosowej, leży nad podniebieniem"],"correct":0},
+{"q":"Największa zatoka to..?","a":["zatoka szczękowa","zatoka czołowa","zatoka klinowa","zatoka sitowa"],"correct":0},
+{"q":"Jabłko Adama- jaka chrząstka powoduje tą wyniosłość krtaniową?","a":["Chrzastka tarczowata","chrząstka pierścieniowata","chrząstka nagłośniowa","chrząstka nalewkowata"],"correct":0},
+{"q":"Jaki jest przebieg oddychania?","a":["jama nosowa->gardło->krtań->tchawica->oskrzela->oskrzeliki","jama nosowa->krtań->gardło->tchawica->oskrzela->oskrzeliki","jama nosowa->gardło->tchawica->krtań->oskrzela->oskrzeliki","jama nosowa->gardło->krtań->oskrzeliki->oskrzela->tchawica"],"correct":0},
+{"q":"Co i gdzie odprowadza natlenowaną krew z płuc?","a":["Zz. Płucne odprowadzają natlenowaną krew do lewego przedsionka.","Tętnice płucne odprowadzają natlenowaną krew do prawego przedsionka.","Żyły płucne odprowadzają natlenowaną krew do prawej komory.","Tętnice oskrzelowe odprowadzają natlenowaną krew do lewego przedsionka."],"correct":0},
+{"q":"Najmniejsza autonomiczna struktura płuca?","a":["grono","segment oskrzelowo-płucny","płat płuca","oskrzele główne"],"correct":0},
+{"q":"Czym jest małžowina dolna nosa?","a":["jest oddzielną kością","jest częścią kości sitowej","jest częścią kości klinowej","jest chrząstką przegrody nosa"],"correct":0},
+{"q":"Gdzie znajduje się szczelina pozioma płuca?","a":["w prawym płucu, pomiędzy płatem górnym a środkowym; wraz ze szczeliną skośną oddziela również płat dolny","w lewym płucu, pomiędzy płatem górnym a dolnym","w prawym płucu, pomiędzy płatem środkowym a dolnym","w obu płucach, pomiędzy płatem górnym a dolnym"],"correct":0},
+{"q":"W jamie nosowej wyróżniamy małżowiny nosowe","a":["lewą, prawą, dolną","boczną, pośrodkową, przyśrodkową","przednią, srodkową, dolną","górną, środkową, dolną"],"correct":3},
+{"q":"Otwór dolnej przewodu nosowo-łzowego znajduje się w","a":["przewodzie nosowym dolnym","przewodzie nosowym górnym","przewodzie nosowym środkowym","przewodzie nosowym przednim"],"correct":0},
+{"q":"Prawdą jest, že oskrzele prawe jest","a":["dłuższe od lewego","ma węższe światło niż lewe","przebiega bardziej poziomo niż lewe","A,B,C fałszywe"],"correct":3},
+{"q":"Najbardziej do dołu we wnęce płuca leży","a":["oskrzele","Zyła płucna górna","żyła płucna dolna","tętnica plucna"],"correct":2},
+{"q":"opłucną ścienną nie tworzy opłucna","a":["Żebrowa","trzewna","przeponowa","Śródpiersiowa"],"correct":1},
+{"q":"unerwienie krtani pochodzi z gałęzi nerwu","a":["dodatkowego","błednego","przeponowego","językowo-gardłowego"],"correct":1}
 ];
-const $=id=>document.getElementById(id);let deck=[],pos=0,score=0,chosen=null,mistakes=[];
-function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
-function show(which){['start','play','finish'].forEach(id=>$(id).classList.toggle('hidden',id!==which))}
-function begin(){let n=$('count').value;deck=shuffle(BANK.filter(q=>!q.excluded)).slice(0,n==='all'?BANK.filter(q=>!q.excluded).length:Number(n)).map(q=>{let opts=shuffle(q.a.map((text,i)=>({text,correct:i===q.correct})));return {...q,opts}});pos=0;score=0;mistakes=[];show('play');render()}
-function render(){chosen=null;const q=deck[pos];$('number').textContent=`Pytanie ${pos+1} z ${deck.length}`;$('points').textContent=`Punkty: ${score}`;$('fill').style.width=`${pos/deck.length*100}%`;$('question').textContent=q.q;$('next').disabled=true;$('next').textContent=pos===deck.length-1?'Zobacz wynik →':'Następne pytanie →';$('feedback').className='feedback hidden';$('sourceNote').textContent=q.note?'Uwaga o źródle: '+q.note:'';$('sourceNote').classList.toggle('hidden',!q.note);$('answers').replaceChildren();q.opts.forEach((op,i)=>{const btn=document.createElement('button');btn.className='answer';btn.innerHTML=`<span class="letter">${'ABCDE'[i]}</span>`;const text=document.createElement('span');text.textContent=op.text;btn.append(text);btn.addEventListener('click',()=>pick(i));$('answers').append(btn)})}
-function pick(i){if(chosen!==null)return;chosen=i;const q=deck[pos],correct=q.opts[i].correct;score+=Number(correct);if(!correct)mistakes.push({question:q.q,yours:q.opts[i].text,right:q.opts.find(x=>x.correct).text});const btns=[...$('answers').children];btns.forEach((b,j)=>{b.disabled=true;if(q.opts[j].correct)b.classList.add('correct');else if(j===i)b.classList.add('wrong')});$('points').textContent=`Punkty: ${score}`;$('feedback').textContent=correct?'Świetnie! Poprawna odpowiedź.':`Poprawna odpowiedź: ${q.opts.find(x=>x.correct).text}`;$('feedback').className='feedback '+(correct?'ok':'no');$('next').disabled=false}
-function advance(){if(chosen===null)return;if(++pos<deck.length)render();else finish()}
-function finish(){show('finish');$('finalScore').textContent=`${score} / ${deck.length}`;$('summary').textContent=`Wynik: ${Math.round(score/deck.length*100)}% poprawnych odpowiedzi.`;$('review').classList.add('hidden');$('review').replaceChildren();$('reviewBtn').disabled=mistakes.length===0;$('reviewBtn').textContent=mistakes.length?`Pokaż błędy (${mistakes.length})`:'Bez błędów!';mistakes.forEach(m=>{const div=document.createElement('div');div.className='review-item';const strong=document.createElement('strong');strong.textContent=m.question;const wrong=document.createElement('div');wrong.textContent='Twoja odpowiedź: '+m.yours;const right=document.createElement('div');right.textContent='Poprawna: '+m.right;div.append(strong,wrong,right);$('review').append(div)})}
-$('startBtn').addEventListener('click',begin);$('next').addEventListener('click',advance);$('again').addEventListener('click',()=>show('start'));$('reviewBtn').addEventListener('click',()=>$('review').classList.toggle('hidden'));
-</script></body></html>
+
+const $ = id => document.getElementById(id);
+
+let deck = [];
+let pos = 0;
+let score = 0;
+let chosen = null;
+let mistakes = [];
+
+function shuffle(array) {
+  const result = [...array];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function show(section) {
+  ["start", "play", "finish"].forEach(id => {
+    $(id).classList.toggle("hidden", id !== section);
+  });
+}
+
+function begin() {
+  const count = $("count").value;
+
+  const number = count === "all"
+    ? BANK.length
+    : Number(count);
+
+  deck = shuffle(BANK)
+    .slice(0, number)
+    .map(q => ({
+      ...q,
+      opts: shuffle(q.a.map((text, i) => ({
+        text,
+        correct: i === q.correct
+      })))
+    }));
+
+  pos = 0;
+  score = 0;
+  mistakes = [];
+
+  show("play");
+  render();
+}
+
+function render() {
+  chosen = null;
+
+  const q = deck[pos];
+
+  $("number").textContent =
+    `Pytanie ${pos + 1} z ${deck.length}`;
+
+  $("points").textContent = `Punkty: ${score}`;
+
+  $("fill").style.width =
+    `${(pos / deck.length) * 100}%`;
+
+  $("question").textContent = q.q;
+
+  $("next").disabled = true;
+
+  $("next").textContent =
+    pos === deck.length - 1
+      ? "Zobacz wynik →"
+      : "Następne pytanie →";
+
+  $("feedback").className = "feedback hidden";
+  $("answers").replaceChildren();
+
+  q.opts.forEach((option, i) => {
+    const button = document.createElement("button");
+
+    button.className = "answer";
+
+    const letter = document.createElement("span");
+    letter.className = "letter";
+    letter.textContent = "ABCD"[i];
+
+    const text = document.createElement("span");
+    text.textContent = option.text;
+
+    button.append(letter, text);
+
+    button.addEventListener("click", () => pick(i));
+
+    $("answers").append(button);
+  });
+}
+
+function pick(index) {
+  if (chosen !== null) return;
+
+  chosen = index;
+
+  const q = deck[pos];
+  const correct = q.opts[index].correct;
+
+  if (correct) {
+    score++;
+  } else {
+    mistakes.push({
+      question: q.q,
+      yours: q.opts[index].text,
+      right: q.opts.find(o => o.correct).text
+    });
+  }
+
+  [...$("answers").children].forEach((button, i) => {
+    button.disabled = true;
+
+    if (q.opts[i].correct) {
+      button.classList.add("correct");
+    } else if (i === index) {
+      button.classList.add("wrong");
+    }
+  });
+
+  $("points").textContent = `Punkty: ${score}`;
+
+  $("feedback").textContent = correct
+    ? "Świetnie! Poprawna odpowiedź."
+    : `Poprawna odpowiedź: ${q.opts.find(o => o.correct).text}`;
+
+  $("feedback").className =
+    "feedback " + (correct ? "ok" : "no");
+
+  $("next").disabled = false;
+}
+
+function advance() {
+  if (chosen === null) return;
+
+  pos++;
+
+  if (pos < deck.length) {
+    render();
+  } else {
+    finish();
+  }
+}
+
+function finish() {
+  show("finish");
+
+  $("fill").style.width = "100%";
+
+  $("finalScore").textContent =
+    `${score} / ${deck.length}`;
+
+  $("summary").textContent =
+    `Wynik: ${Math.round(score / deck.length * 100)}%`;
+
+  $("review").replaceChildren();
+  $("review").classList.add("hidden");
+
+  $("reviewBtn").disabled = mistakes.length === 0;
+
+  $("reviewBtn").textContent = mistakes.length
+    ? `Pokaż błędy (${mistakes.length})`
+    : "Bez błędów!";
+
+  mistakes.forEach(m => {
+    const item = document.createElement("div");
+    item.className = "review-item";
+
+    const title = document.createElement("strong");
+    title.textContent = m.question;
+
+    const wrong = document.createElement("div");
+    wrong.textContent = "Twoja odpowiedź: " + m.yours;
+
+    const right = document.createElement("div");
+    right.textContent = "Poprawna: " + m.right;
+
+    item.append(title, wrong, right);
+    $("review").append(item);
+  });
+}
+
+$("startBtn").addEventListener("click", begin);
+$("next").addEventListener("click", advance);
+
+$("again").addEventListener("click", () => {
+  show("start");
+});
+
+$("reviewBtn").addEventListener("click", () => {
+  $("review").classList.toggle("hidden");
+});
+</script>
+
+</body>
+</html>
