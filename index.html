@@ -8,284 +8,57 @@
 <section class="panel hidden center" id="finish"><h2>Koniec quizu! 🎉</h2><div id="finalScore" class="score"></div><p id="summary"></p><div class="controls"><button class="primary" id="again">Zagraj ponownie</button><button id="reviewBtn">Pokaż błędy</button></div><div id="review" class="review hidden"></div></section>
 <script>
 const BANK = [
-  // PIERWSZY ZESTAW PYTAŃ
+  {"q":"komórki sitowe tylne uchodzą do przewodu nosowego","a":["górnego","środkowego","dolnego","przedniego"],"correct":0},
+  {"q":"Do jamy nosowej nie uchodzą zatoki","a":["szczękowa","czołowa","klinowa","żadna z wymienionych"],"correct":3},
+  {"q":"chrząstką która jest w nosie haczykowo zagięta jest chrząstka","a":["przegrody nosa","chrzastka boczna","skrzydłowa większa","skrzydłowa mniejsza"],"correct":2},
+  {"q":"krtań leży na poziomie kręgu","a":["1 - 3 szyjnego","1 - 5 szyjnego","4 - 7 szyjnego","1 - 3 piersiowego"],"correct":2},
+  {"q":"więzadła głosowe krtani rozpięte są między chrząstkami","a":["rózkowatą a tarczowatą","różkowatą a nalewkowatą","tarczowatą a nagłosniową","nalewkowatymi a tarczowatą"],"correct":3},
+  {"q":"podporą nagłośni jest chrząstka","a":["pierscieniowata","nagłośniowa","tarczowata","nalewkowa"],"correct":2},
+  {"q":"szpary nagłośni rozwiera mięsień","a":["pierścienno-nalewkowy tylny","pierścienno-nalewkowy boczny","tarczowo-nalewkowy","nalewkowy"],"correct":0},
+  {"q":"w nosie nie wyróżniamy chrząstki","a":["przegrody nosa","chrząstki bocznej","skrzydłowej większej","wszystkie wymienione chrząstki występują w nosie"],"correct":3},
+  {"q":"tchawica sięga ku dołowi rozdwajając się na wysokości kręgu piersiowego","a":["Th1/Th2","Th2/Th3","Th4/Th5","Th6/Th7"],"correct":2},
+  {"q":"najbardziej do przodu we wnęce pluca lezy","a":["oskrzele","Żyła plucna górna","zyła plucna dolna","tetnica płucna"],"correct":1},
+  {"q":"krtań ma długość","a":["10 cm","4-6 cm","8-9 cm","2-3 cm"],"correct":1},
+  {"q":"szczelina płucna pozioma oddziela","a":["płat górny i dolny płuca prawego","płat górny i dolny płuca lewego","płat górny i środkowy płuca prawego","płat górny i środkowy płuca lewego"],"correct":2},
+  {"q":"szczelina płucna skośna oddziela","a":["plat górny i dolny płuca prawego","płat górny i dolny płuca lewego","płat górny i środkowy płuca prawego","A i B prawda"],"correct":3},
+  {"q":"w płucach wyróżniamy segmenty oskrzelowo-płucne w ilości","a":["razem w prawym i lewym płucu 10 segmentów","8 segmentów w prawym i 10 w lewym","10 w prawym i 10 w lewym","8 w prawym i 8 w lewym"],"correct":2},
+  {"q":"na nosie zewnętrznym nie wyróżniamy","a":["skrzydeł nosa","grzbietu","powierzchni bocznych","małżowiny nosowej dolnej"],"correct":3},
+  {"q":"granica między śródpiersiem górnym i dolnym znajduje się na wysokości kręgu piersiowego","a":["Th1","Th2","Th3","Th4/Th5"],"correct":3},
+  {"q":"jama opłucnej znajduje się pomiędzy oplucną","a":["Ścienną a trzewną","żebrową a przeponową","przeponową a śródpiersiową","zebrową a sródpiersiową"],"correct":0},
+  {"q":"Oskrzela oddechowe po dwukrotnym podziale przechodzą w","a":["Przewodziki pęcherzykowe","pęcherzyki płucne","oskrzela podsegmentowe","oskrzela segmentowe"],"correct":0},
+  {"q":"korzeń płuca stanowi","a":["Oskrzela","żyła płucna Górna","tetnica płucna","wszystkie powyższe"],"correct":3},
+  {"q":"umowna granica dzieląca drogi oddechowe na górne i dolne przebiega na wysokości","a":["łuku aorty","zębów trzonowych","krẹgu th4/TH5","fałdów głosowych"],"correct":3},
 
-  {
-    "q": "komórki sitowe tylne uchodzą do przewodu nosowego",
-    "a": ["górnego", "środkowego", "dolnego", "przedniego", "bocznego"],
-    "correct": 0
-  },
-  {
-    "q": "Do jamy nosowej nie uchodzą zatoki",
-    "a": ["szczękowa", "czołowa", "komórki sitowe przednie", "klinowa", "wszystkie powyzsze"],
-    "correct": null
-  },
-  {
-    "q": "chrząstką która jest w nosie haczykowo zagięta jest chrząstka",
-    "a": ["przegrody nosa", "chrzastka boczna", "skrzydłowa większa", "skrzydłowa mniejsza"],
-    "correct": 2
-  },
-  {
-    "q": "krtań leży na poziomie kręgu",
-    "a": ["1 - 3 szyjnego", "1 - 5 szyjnego", "4 - 7 szyjnego", "1 - 3 piersiowego", "7 piersiowego"],
-    "correct": 2
-  },
-  {
-    "q": "więzadła głosowe krtani rozpięte są między chrząstkami",
-    "a": ["rózkowatą a tarczowatą", "różkowatą a nalewkowatą", "tarczowatą a nagłosniową", "klinowatą a nagłośniową", "nalewkowatymi a tarczowatą"],
-    "correct": 4
-  },
-  {
-    "q": "podporą nagłośni jest chrząstka",
-    "a": ["pierscieniowata", "nagłośniowa", "tarczowata", "klinowata", "nalewkowa"],
-    "correct": null
-  },
-  {
-    "q": "szpary nagłośni rozwiera mięsień",
-    "a": ["pierścienno-nalewkowy tylny", "pierścienno-nalewkowy boczny", "tarczowo-nalewkowy", "nalewkowy", "zaden z powyzszych"],
-    "correct": 0
-  },
-  {
-    "q": "w nosie nie wyróżniamy chrząstki",
-    "a": ["przegrody nosa", "chrząstki bocznej", "skrzydłowej większej", "skrzydłowej mniejszej", "wszystkie powyżej wymienione chrząstki występują w nosie"],
-    "correct": 4
-  },
-  {
-    "q": "tchawica sięga ku dołowi rozdwajając się na wysokości kręgu piersiowego",
-    "a": ["Th1/Th2", "Th2/Th3", "Th4/Th5", "Th6/Th7", "Th8/Th9"],
-    "correct": 2
-  },
-  {
-    "q": "najbardziej do przodu we wnęce pluca lezy",
-    "a": ["oskrzele", "Żyła plucna górna", "zyła plucna dolna", "tetnica płucna", "zadne z powyzszych"],
-    "correct": 1
-  },
-  {
-    "q": "krtań ma długość",
-    "a": ["10 cm", "4-6 cm", "8-9 cm", "2-3 cm", "12 cm"],
-    "correct": 1
-  },
-  {
-    "q": "szczelina płucna pozioma oddziela",
-    "a": ["płat górny i dolny płuca prawego", "płat górny i dolny płuca lewego", "płat górny i środkowy płuca prawego", "płat górny i środkowy płuca lewego", "płat dolny i srodkowy płuca prawego"],
-    "correct": 2
-  },
-  {
-    "q": "szczelina płucna skośna oddziela",
-    "a": ["plat górny i dolny płuca prawego", "płat górny i dolny płuca lewego", "płat górny i środkowy płuca prawego", "A i B prawda", "wszystkie odp są fałszywe"],
-    "correct": 3
-  },
-  {
-    "q": "w płucach wyróżniamy segmenty oskrzelowo-płucne w ilości",
-    "a": ["razem w prawym i lewym płucu 10 segmentów", "8 segmentów w prawym i 10 w lewym", "10 w prawym i 10 w lewym", "8 w prawym i 8 w lewym", "żadne z powyższych"],
-    "correct": 2
-  },
-  {
-    "q": "na nosie zewnętrznym nie wyróżniamy",
-    "a": ["skrzydeł nosa", "grzbietu", "powierzchni bocznych", "podstawy", "szczytu"],
-    "correct": null
-  },
-  {
-    "q": "granica między śródpiersiem górnym i dolnym znajduje się na wysokości kręgu piersiowego",
-    "a": ["Th1", "Th2", "Th3", "Th4"],
-    "correct": 3
-  },
-  {
-    "q": "jama opłucnej znajduje się pomiędzy oplucną",
-    "a": ["Ścienną a trzewną", "żebrową a przeponową", "przeponową a śródpiersiową", "zebrową a sródpiersiową", "żadne z powyższych"],
-    "correct": 0
-  },
-  {
-    "q": "Oskrzela oddechowe po dwukrotnym podziale przechodzą w",
-    "a": ["Przewodziki pęcherzykowe", "pęcherzyki płucne", "oskrzela podsegmentowe", "oskrzela segmentowe", "zadne z powyzszych"],
-    "correct": 0
-  },
-  {
-    "q": "korzeń płuca stanowi",
-    "a": ["Oskrzela", "żyła płucna Górna", "żyła płucna Dolna", "tetnica płucna", "wszystkie powyższe"],
-    "correct": 4
-  },
-  {
-    "q": "umowna granica dzieląca drogi oddechowe na górne i dolne przebiega na wysokości",
-    "a": ["łuku aorty", "zębów trzonowych", "krẹgu th4/TH5", "kosci gnykowej", "fałdów głosowych"],
-    "correct": 4
-  },
+  {"q":"Opłucna co to jest-zaznaczyć poprawne?","a":["jest to błona surowicza, mamy opłucną ścienną i opłucną płucną lub trzewną","jest to błona śluzowa wyściełająca oskrzela","jest to błona otaczająca wyłącznie tchawicę","jest to warstwa mięśniowa ściany klatki piersiowej"],"correct":0},
+  {"q":"Co ogranicza nagłośnie i gdzie ona ležy?","a":["ogranicza ona od góry wejście do krtani, leży do tyłu od nasady jeżyka i kości gnykowej","ogranicza od dołu wejście do tchawicy, leży przed mostkiem","ogranicza wejście do oskrzela prawego, leży poniżej tchawicy","ogranicza wejście do jamy nosowej, leży nad podniebieniem"],"correct":0},
+  {"q":"Największa zatoka to..?","a":["zatoka szczękowa","zatoka czołowa","zatoka klinowa","zatoka sitowa"],"correct":0},
+  {"q":"Jabłko Adama- jaka chrząstka powoduje tą wyniosłość krtaniową?","a":["Chrzastka tarczowata","chrząstka pierścieniowata","chrząstka nagłośniowa","chrząstka nalewkowata"],"correct":0},
+  {"q":"Jaki jest przebieg oddychania?","a":["jama nosowa->gardło->krtań->tchawica->oskrzela->oskrzeliki","jama nosowa->krtań->gardło->tchawica->oskrzela->oskrzeliki","jama nosowa->gardło->tchawica->krtań->oskrzela->oskrzeliki","jama nosowa->gardło->krtań->oskrzeliki->oskrzela->tchawica"],"correct":0},
+  {"q":"Co i gdzie odprowadza natlenowaną krew z płuc?","a":["Zz. Płucne odprowadzają natlenowaną krew do lewego przedsionka.","Tętnice płucne odprowadzają natlenowaną krew do prawego przedsionka.","Żyły płucne odprowadzają natlenowaną krew do prawej komory.","Tętnice oskrzelowe odprowadzają natlenowaną krew do lewego przedsionka."],"correct":0},
+  {"q":"Najmniejsza autonomiczna struktura płuca?","a":["grono","segment oskrzelowo-płucny","płat płuca","oskrzele główne"],"correct":0},
+  {"q":"Czym jest małžowina dolna nosa?","a":["jest oddzielną kością","jest częścią kości sitowej","jest częścią kości klinowej","jest chrząstką przegrody nosa"],"correct":0},
+  {"q":"Gdzie znajduje się szczelina pozioma płuca?","a":["w prawym płucu, pomiędzy płatem górnym a stodktroma. razem ze szczęliną škośną dzieli równiež na plat dolny.","w lewym płucu, pomiędzy płatem górnym a dolnym","w prawym płucu, pomiędzy płatem środkowym a dolnym","w obu płucach, pomiędzy płatem górnym a dolnym"],"correct":0},
 
-  // PYTANIA Z ODPOWIEDZIAMI OPISOWYMI
-
-  {
-    "q": "Opłucna co to jest-zaznaczyć poprawne?",
-    "a": [
-      "jest to błona surowicza, mamy opłucną ścienną i opłucną płucną lub trzewną",
-      "jest to błona śluzowa wyściełająca oskrzela",
-      "jest to błona otaczająca wyłącznie tchawicę",
-      "jest to warstwa mięśniowa ściany klatki piersiowej"
-    ],
-    "correct": 0
-  },
-  {
-    "q": "Co ogranicza nagłośnie i gdzie ona ležy?",
-    "a": [
-      "ogranicza ona od góry wejście do krtani, leży do tyłu od nasady jeżyka i kości gnykowej",
-      "ogranicza od dołu wejście do tchawicy, leży przed mostkiem",
-      "ogranicza wejście do oskrzela prawego, leży poniżej tchawicy",
-      "ogranicza wejście do jamy nosowej, leży nad podniebieniem"
-    ],
-    "correct": 0
-  },
-  {
-    "q": "Największa zatoka to..?",
-    "a": ["zatoka szczękowa", "zatoka czołowa", "zatoka klinowa", "zatoka sitowa"],
-    "correct": 0
-  },
-  {
-    "q": "Jabłko Adama- jaka chrząstka powoduje tą wyniosłość krtaniową?",
-    "a": ["Chrzastka tarczowata", "chrząstka pierścieniowata", "chrząstka nagłośniowa", "chrząstka nalewkowata"],
-    "correct": 0
-  },
-  {
-    "q": "Jaki jest przebieg oddychania?",
-    "a": [
-      "jama nosowa->gardło->krtań->tchawica->oskrzela->oskrzeliki",
-      "jama nosowa->krtań->gardło->tchawica->oskrzela->oskrzeliki",
-      "jama nosowa->gardło->tchawica->krtań->oskrzela->oskrzeliki",
-      "jama nosowa->gardło->krtań->oskrzeliki->oskrzela->tchawica"
-    ],
-    "correct": 0
-  },
-  {
-    "q": "Co i gdzie odprowadza natlenowaną krew z płuc?",
-    "a": [
-      "Zz. Płucne odprowadzają natlenowaną krew do lewego przedsionka.",
-      "Tętnice płucne odprowadzają natlenowaną krew do prawego przedsionka.",
-      "Żyły płucne odprowadzają natlenowaną krew do prawej komory.",
-      "Tętnice oskrzelowe odprowadzają natlenowaną krew do lewego przedsionka."
-    ],
-    "correct": 0
-  },
-  {
-    "q": "Najmniejsza autonomiczna struktura płuca?",
-    "a": ["grono", "segment oskrzelowo-płucny", "płat płuca", "oskrzele główne"],
-    "correct": 0
-  },
-  {
-    "q": "Czym jest małžowina dolna nosa?",
-    "a": ["jest oddzielną kością", "jest częścią kości sitowej", "jest częścią kości klinowej", "jest chrząstką przegrody nosa"],
-    "correct": 0
-  },
-  {
-    "q": "Gdzie znajduje się szczelina pozioma płuca?",
-    "a": [
-      "w prawym płucu, pomiędzy płatem górnym a stodktroma. razem ze szczęliną škośną dzieli równiež na plat dolny.",
-      "w lewym płucu, pomiędzy płatem górnym a dolnym",
-      "w prawym płucu, pomiędzy płatem środkowym a dolnym",
-      "w obu płucach, pomiędzy płatem górnym a dolnym"
-    ],
-    "correct": 0
-  },
-
-  // KOLEJNY ZESTAW Z PDF-A
-
-  {
-    "q": "W jamie nosowej wyróżniamy małżowiny nosowe",
-    "a": ["lewą, prawą, dolną", "boczną, pośrodkową, przyśrodkową", "przednią, srodkową, dolną", "górną, środkową, dolną", "Żadne z powyższych"],
-    "correct": 3
-  },
-  {
-    "q": "Do jamy nosowej nie uchodzą zatoki",
-    "a": ["szczękowa", "czołowa", "komórki sitowe przednie", "klinowa", "e) wszystkie powyższe"],
-    "correct": null
-  },
-  {
-    "q": "Otwór dolnej przewodu nosowo-łzowego znajduje się w",
-    "a": ["przewodzie nosowym dolnym", "przewodzie nosowym górnym", "przewodzie nosowym środkowym", "przewodzie nosowym przednim", "Żadne z powyższych"],
-    "correct": 0
-  },
-  {
-    "q": "krtań leży na poziomie kręgu",
-    "a": ["I-III szyjnego", "I-V szyjnego", "IV-VII szyjnego", "I-III piersiowego", "IV-VII piersiowego"],
-    "correct": 2
-  },
-  {
-    "q": "Więzadła głosowe krtani rozpięte są między chrząstkami",
-    "a": ["różkowatą,a tarczowata", "różowatą, a nalewkowatą", "tarczowatą, a nagłosniową", "klinowatą, a nagłosniową", "nalewkowatymi, a tarczowatą"],
-    "correct": 4
-  },
-  {
-    "q": "Podporą nagłośni jest chrząstka",
-    "a": ["pierścieniowata", "nagłośniowa", "tarczowata", "klinowata", "nalewkowa"],
-    "correct": null
-  },
-  {
-    "q": "Szparę głośni rozwiera mięsień",
-    "a": ["Pierścienno-nalwekowy tylny", "pierScienno-nalewkowy boczny", "tarczowo-nalewkowy", "nalewkowy", "Żaden z powyższych"],
-    "correct": 0
-  },
-  {
-    "q": "Prawdą jest, že oskrzele prawe jest",
-    "a": ["dłuższe od lewego", "ma węższe światło niż lewe", "przebiega bardziej poziomo niż lewe", "A,B,C prawdziwe", "A,B,C fałszywe"],
-    "correct": 4
-  },
-  {
-    "q": "Tchawica sięga ku dołowi rozdwajając się na wysokości kręgu piersiowego",
-    "a": ["Th1/tH2", "Th2/Th3", "Th4/Th5", "Th6/Th7"],
-    "correct": 2
-  },
-  {
-    "q": "Najbardziej do przodu we wnęce płuca leży",
-    "a": ["oskrzele", "żyła płucna górna", "żyła płucna dolna", "tetnica plucna", "Żadne z powyższych"],
-    "correct": 1
-  },
-  {
-    "q": "Najbardziej do dołu we wnęce płuca leży",
-    "a": ["oskrzele", "Zyła płucna górna", "żyła płucna dolna", "tętnica plucna", "Żadne z powyższych"],
-    "correct": 2
-  },
-  {
-    "q": "Szczelina płucna pozioma oddziela",
-    "a": ["płat górny i dolny płuca prawego", "płat górny i dolny płuca lewego", "płat górny i środkowy płuca prawego", "płat górny i środkowy płuca lewego", "płat dolny i Srodkowy płuca prawego"],
-    "correct": 2
-  },
-  {
-    "q": "Szczelina płucna skośna oddziela",
-    "a": ["Płat górny i dolny płuca prawego", "płat górny i dolny płuca lewego", "Płat górny i Środkowy płuca prawego", "A i B prawdziwe", "Żadne z powyższych"],
-    "correct": 3
-  },
-  {
-    "q": "w płucach wyróżniamy segmenty oskrzelowo-płucne w ilości",
-    "a": ["razem w lewym i prawym płucu 10 segmentów", "8 w płucu prawym i 10 w lewym", "10 w prawym i 10 w lewym", "8 w prawym 8 w lewym"],
-    "correct": 2
-  },
-  {
-    "q": "opłucną ścienną nie tworzy opłucna",
-    "a": ["Żebrowa", "trzewna", "przeponowa", "Śródpiersiowa", "wszystkie powyższe opłucne tworzą opłucną ścienną"],
-    "correct": 1
-  },
-  {
-    "q": "Graanica między śródpiersiem górnym i dolnym znajduje się na wysokości kręgu piersiowego",
-    "a": ["Th1", "Th2", "Th3", "Th4", "Żadne z powyższych"],
-    "correct": null
-  },
-  {
-    "q": "Jama opłucnej znajduje się między opłucną",
-    "a": ["Ścienną, a trzewną", "Zebrową, a przeponową", "przeponową, Sródpiersiową", "Żebrową, a śródpiersiową", "Żadne z powyższych"],
-    "correct": 0
-  },
-  {
-    "q": "Oskrzelka oddechowe po dwukrotnym podziale przechodzą w",
-    "a": ["przewodziki pęcherzykowe", "pęcherzyki płucne", "oskrzela podsegmentowe", "oskrzela segmentowe", "Żadne z powyższych"],
-    "correct": 0
-  },
-  {
-    "q": "Korzeń płuca stanowi",
-    "a": ["oskrzele", "żyła płucna górna", "żyła płucna dolna", "tętnica plucna", "wszystkie powyzsze"],
-    "correct": 4
-  },
-  {
-    "q": "unerwienie krtani pochodzi z gałęzi nerwu",
-    "a": ["dodatkowego", "błednego", "przeponowego", "językowo-gardłowego", "wszystkie powyźsze"],
-    "correct": 1
-  }
+  {"q":"W jamie nosowej wyróżniamy małżowiny nosowe","a":["lewą, prawą, dolną","boczną, pośrodkową, przyśrodkową","przednią, srodkową, dolną","górną, środkową, dolną"],"correct":3},
+  {"q":"Do jamy nosowej nie uchodzą zatoki","a":["szczękowa","czołowa","komórki sitowe przednie","żadna z wymienionych"],"correct":3},
+  {"q":"Otwór dolnej przewodu nosowo-łzowego znajduje się w","a":["przewodzie nosowym dolnym","przewodzie nosowym górnym","przewodzie nosowym środkowym","przewodzie nosowym przednim"],"correct":0},
+  {"q":"krtań leży na poziomie kręgu","a":["I-III szyjnego","I-V szyjnego","IV-VII szyjnego","I-III piersiowego"],"correct":2},
+  {"q":"Więzadła głosowe krtani rozpięte są między chrząstkami","a":["różkowatą,a tarczowata","różowatą, a nalewkowatą","tarczowatą, a nagłosniową","nalewkowatymi, a tarczowatą"],"correct":3},
+  {"q":"Podporą nagłośni jest chrząstka","a":["pierścieniowata","nagłośniowa","tarczowata","nalewkowa"],"correct":2},
+  {"q":"Szparę głośni rozwiera mięsień","a":["Pierścienno-nalwekowy tylny","pierScienno-nalewkowy boczny","tarczowo-nalewkowy","nalewkowy"],"correct":0},
+  {"q":"Prawdą jest, že oskrzele prawe jest","a":["dłuższe od lewego","ma węższe światło niż lewe","przebiega bardziej poziomo niż lewe","A,B,C fałszywe"],"correct":3},
+  {"q":"Tchawica sięga ku dołowi rozdwajając się na wysokości kręgu piersiowego","a":["Th1/tH2","Th2/Th3","Th4/Th5","Th6/Th7"],"correct":2},
+  {"q":"Najbardziej do przodu we wnęce płuca leży","a":["oskrzele","żyła płucna górna","żyła płucna dolna","tetnica plucna"],"correct":1},
+  {"q":"Najbardziej do dołu we wnęce płuca leży","a":["oskrzele","Zyła płucna górna","żyła płucna dolna","tętnica plucna"],"correct":2},
+  {"q":"Szczelina płucna pozioma oddziela","a":["płat górny i dolny płuca prawego","płat górny i dolny płuca lewego","płat górny i środkowy płuca prawego","płat górny i środkowy płuca lewego"],"correct":2},
+  {"q":"Szczelina płucna skośna oddziela","a":["Płat górny i dolny płuca prawego","płat górny i dolny płuca lewego","Płat górny i Środkowy płuca prawego","A i B prawdziwe"],"correct":3},
+  {"q":"w płucach wyróżniamy segmenty oskrzelowo-płucne w ilości","a":["razem w lewym i prawym płucu 10 segmentów","8 w płucu prawym i 10 w lewym","10 w prawym i 10 w lewym","8 w prawym 8 w lewym"],"correct":2},
+  {"q":"opłucną ścienną nie tworzy opłucna","a":["Żebrowa","trzewna","przeponowa","Śródpiersiowa"],"correct":1},
+  {"q":"Graanica między śródpiersiem górnym i dolnym znajduje się na wysokości kręgu piersiowego","a":["Th1","Th2","Th3","Th4/Th5"],"correct":3},
+  {"q":"Jama opłucnej znajduje się między opłucną","a":["Ścienną, a trzewną","Zebrową, a przeponową","przeponową, Sródpiersiową","Żebrową, a śródpiersiową"],"correct":0},
+  {"q":"Oskrzelka oddechowe po dwukrotnym podziale przechodzą w","a":["przewodziki pęcherzykowe","pęcherzyki płucne","oskrzela podsegmentowe","oskrzela segmentowe"],"correct":0},
+  {"q":"Korzeń płuca stanowi","a":["oskrzele","żyła płucna górna","żyła płucna dolna","wszystkie wymienione"],"correct":3},
+  {"q":"unerwienie krtani pochodzi z gałęzi nerwu","a":["dodatkowego","błednego","przeponowego","językowo-gardłowego"],"correct":1}
 ];
 const $=id=>document.getElementById(id);let deck=[],pos=0,score=0,chosen=null,mistakes=[];
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
