@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bagel Quiz – Anatomia</title>
+<title>Bagel Quiz – Anatomia (Układ pokarmowy)</title>
 
 <style>
 :root {
@@ -227,13 +226,13 @@ footer {
 <header>
   <div class="bagels">🥯🥯🥯</div>
   <h1>Bagel Quiz!</h1>
-  <div class="subtitle">Anatomia – układ oddechowy</div>
+  <div class="subtitle">Anatomia – układ pokarmowy</div>
 </header>
 
 <section class="panel" id="start">
   <h2 class="center">Gotowy na quiz?</h2>
   <p class="center">
-    Sprawdź swoją wiedzę z anatomii układu oddechowego!
+    Sprawdź swoją wiedzę z anatomii układu pokarmowego!
   </p>
 
   <div class="controls">
@@ -241,7 +240,7 @@ footer {
     <select id="count">
       <option value="10">10 pytań</option>
       <option value="20">20 pytań</option>
-      <option value="all">Wszystkie pytania (35)</option>
+      <option value="all">Wszystkie pytania (65)</option>
     </select>
   </div>
 
@@ -295,48 +294,78 @@ footer {
 </section>
 
 <footer>
-  Bagel Quiz • Anatomia • Układ oddechowy
+  Bagel Quiz • Anatomia • Układ pokarmowy
 </footer>
 
 </main>
 
 <script>
 const BANK = [
-{"q":"komórki sitowe tylne uchodzą do przewodu nosowego","a":["górnego","środkowego","dolnego","przedniego"],"correct":0},
-{"q":"Do jamy nosowej nie uchodzą zatoki","a":["szczękowa","czołowa","klinowa","żadna z wymienionych"],"correct":3},
-{"q":"chrząstką która jest w nosie haczykowo zagięta jest chrząstka","a":["przegrody nosa","chrzastka boczna","skrzydłowa większa","skrzydłowa mniejsza"],"correct":2},
-{"q":"krtań leży na poziomie kręgu","a":["1 - 3 szyjnego","1 - 5 szyjnego","III-VI szyjnego","1 - 3 piersiowego"],"correct":2},
-{"q":"więzadła głosowe krtani rozpięte są między chrząstkami","a":["rózkowatą a tarczowatą","różkowatą a nalewkowatą","tarczowatą a nagłosniową","nalewkowatymi a tarczowatą"],"correct":3},
-{"q":"podporą nagłośni jest chrząstka","a":["pierscieniowata","nagłośniowa","tarczowata","nalewkowa"],"correct":2},
-{"q":"szparę głośni rozwiera mięsień","a":["pierścienno-nalewkowy tylny","pierścienno-nalewkowy boczny","tarczowo-nalewkowy","nalewkowy"],"correct":0},
-{"q":"w nosie nie wyróżniamy chrząstki","a":["przegrody nosa","chrząstki bocznej","skrzydłowej większej","wszystkie wymienione chrząstki występują w nosie"],"correct":3},
-{"q":"tchawica sięga ku dołowi rozdwajając się na wysokości kręgu piersiowego","a":["Th1/Th2","Th2/Th3","Th4/Th5","Th6/Th7"],"correct":2},
-{"q":"najbardziej do przodu we wnęce pluca lezy","a":["oskrzele","Żyła plucna górna","zyła plucna dolna","tetnica płucna"],"correct":1},
-{"q":"krtań ma długość","a":["10 cm","4-6 cm","8-9 cm","2-3 cm"],"correct":1},
-{"q":"szczelina płucna pozioma oddziela","a":["płat górny i dolny płuca prawego","płat górny i dolny płuca lewego","płat górny i środkowy płuca prawego","płat górny i środkowy płuca lewego"],"correct":2},
-{"q":"szczelina płucna skośna oddziela","a":["plat górny i dolny płuca prawego","płat górny i dolny płuca lewego","płat górny i środkowy płuca prawego","A i B prawda"],"correct":3},
-{"q":"w płucach wyróżniamy segmenty oskrzelowo-płucne w ilości","a":["razem w prawym i lewym płucu 10 segmentów","8 segmentów w prawym i 10 w lewym","10 w prawym i zwykle 8-10 w lewym","8 w prawym i 8 w lewym"],"correct":2},
-{"q":"na nosie zewnętrznym nie wyróżniamy","a":["skrzydeł nosa","grzbietu","powierzchni bocznych","małżowiny nosowej dolnej"],"correct":3},
-{"q":"granica między śródpiersiem górnym i dolnym znajduje się na wysokości kręgu piersiowego","a":["Th1","Th2","Th3","Th4/Th5"],"correct":3},
-{"q":"jama opłucnej znajduje się pomiędzy oplucną","a":["Ścienną a trzewną","żebrową a przeponową","przeponową a śródpiersiową","zebrową a sródpiersiową"],"correct":0},
-{"q":"Oskrzela oddechowe po dwukrotnym podziale przechodzą w","a":["Przewodziki pęcherzykowe","pęcherzyki płucne","oskrzela podsegmentowe","oskrzela segmentowe"],"correct":0},
-{"q":"korzeń płuca stanowi","a":["Oskrzela","żyła płucna Górna","tetnica płucna","wszystkie wymienione: oskrzele, żyły płucne i tętnica płucna"],"correct":3},
-{"q":"umowna granica dzieląca drogi oddechowe na górne i dolne przebiega na wysokości","a":["łuku aorty","zębów trzonowych","krẹgu th4/TH5","fałdów głosowych"],"correct":3},
-{"q":"Opłucna co to jest-zaznaczyć poprawne?","a":["jest to błona surowicza, mamy opłucną ścienną i opłucną płucną lub trzewną","jest to błona śluzowa wyściełająca oskrzela","jest to błona otaczająca wyłącznie tchawicę","jest to warstwa mięśniowa ściany klatki piersiowej"],"correct":0},
-{"q":"Co ogranicza nagłośnie i gdzie ona ležy?","a":["ogranicza ona od góry wejście do krtani, leży do tyłu od nasady jeżyka i kości gnykowej","ogranicza od dołu wejście do tchawicy, leży przed mostkiem","ogranicza wejście do oskrzela prawego, leży poniżej tchawicy","ogranicza wejście do jamy nosowej, leży nad podniebieniem"],"correct":0},
-{"q":"Największa zatoka to..?","a":["zatoka szczękowa","zatoka czołowa","zatoka klinowa","zatoka sitowa"],"correct":0},
-{"q":"Jabłko Adama- jaka chrząstka powoduje tą wyniosłość krtaniową?","a":["Chrzastka tarczowata","chrząstka pierścieniowata","chrząstka nagłośniowa","chrząstka nalewkowata"],"correct":0},
-{"q":"Jaki jest przebieg oddychania?","a":["jama nosowa->gardło->krtań->tchawica->oskrzela->oskrzeliki","jama nosowa->krtań->gardło->tchawica->oskrzela->oskrzeliki","jama nosowa->gardło->tchawica->krtań->oskrzela->oskrzeliki","jama nosowa->gardło->krtań->oskrzeliki->oskrzela->tchawica"],"correct":0},
-{"q":"Co i gdzie odprowadza natlenowaną krew z płuc?","a":["Zz. Płucne odprowadzają natlenowaną krew do lewego przedsionka.","Tętnice płucne odprowadzają natlenowaną krew do prawego przedsionka.","Żyły płucne odprowadzają natlenowaną krew do prawej komory.","Tętnice oskrzelowe odprowadzają natlenowaną krew do lewego przedsionka."],"correct":0},
-{"q":"Najmniejsza autonomiczna struktura płuca?","a":["grono","segment oskrzelowo-płucny","płat płuca","oskrzele główne"],"correct":0},
-{"q":"Czym jest małžowina dolna nosa?","a":["jest oddzielną kością","jest częścią kości sitowej","jest częścią kości klinowej","jest chrząstką przegrody nosa"],"correct":0},
-{"q":"Gdzie znajduje się szczelina pozioma płuca?","a":["w prawym płucu, pomiędzy płatem górnym a środkowym; wraz ze szczeliną skośną oddziela również płat dolny","w lewym płucu, pomiędzy płatem górnym a dolnym","w prawym płucu, pomiędzy płatem środkowym a dolnym","w obu płucach, pomiędzy płatem górnym a dolnym"],"correct":0},
-{"q":"W jamie nosowej wyróżniamy małżowiny nosowe","a":["lewą, prawą, dolną","boczną, pośrodkową, przyśrodkową","przednią, srodkową, dolną","górną, środkową, dolną"],"correct":3},
-{"q":"Otwór dolnej przewodu nosowo-łzowego znajduje się w","a":["przewodzie nosowym dolnym","przewodzie nosowym górnym","przewodzie nosowym środkowym","przewodzie nosowym przednim"],"correct":0},
-{"q":"Prawdą jest, že oskrzele prawe jest","a":["dłuższe od lewego","ma węższe światło niż lewe","przebiega bardziej poziomo niż lewe","A,B,C fałszywe"],"correct":3},
-{"q":"Najbardziej do dołu we wnęce płuca leży","a":["oskrzele","Zyła płucna górna","żyła płucna dolna","tętnica plucna"],"correct":2},
-{"q":"opłucną ścienną nie tworzy opłucna","a":["Żebrowa","trzewna","przeponowa","Śródpiersiowa"],"correct":1},
-{"q":"unerwienie krtani pochodzi z gałęzi nerwu","a":["dodatkowego","błednego","przeponowego","językowo-gardłowego"],"correct":1}
+  {"q":"Więzadło trójkątne powstaje z połączenia blaszek więzadeł","a":["żylnych","obłego i żylnego","sierpowatego i obłego","wieńcowych"],"correct":3},
+  {"q":"Do mięśni wewnętrznych języka nie zaliczamy mięśnia","a":["podłużnego górnego","podłużnego dolnego","poprzecznego","skośnego"],"correct":3},
+  {"q":"Przewód trzustkowy uchodzi do","a":["jelita czczego","jelita krętego","odbytnicy","dwunastnicy"],"correct":3},
+  {"q":"Zębami jednokorzeniowymi są","a":["kły","siekacze","zęby przedtrzonowe","kły i siekacze"],"correct":3},
+  {"q":"W uzębieniu stałym jako pierwszy wyrzyna się ząb","a":["siekacz","kieł","przedtrzonowy","trzonowy pierwszy"],"correct":3},
+  {"q":"Do gruczołów czysto śluzowych zaliczamy","a":["śliniankę przyuszną","gruczoły językowe","gruczoły podniebienne","gruczoły policzkowe"],"correct":2},
+  {"q":"Przewód ślinianki językowej uchodzi na wysokości","a":["kła","siekacza","pierwszego zęba przedtrzonowego","drugiego zęba trzonowego"],"correct":0},
+  {"q":"Podniebienie miękkie tworzą mięśnie w ilości par","a":["1","2","3","5"],"correct":3},
+  {"q":"Brodawki nitkowate języka znajdują się na","a":["korzeniu","grzbiecie","wzdłuż bruzdy granicznej","powierzchni dolnej"],"correct":1},
+  {"q":"Do mięśni zewnętrznych języka zaliczamy mięsień","a":["podłużny górny","poprzeczny","pionowy","bródkowo-językowy"],"correct":3},
+  {"q":"W przewód pęcherzykowy przedłuża się","a":["szyjka","trzon","dno","przewód wątrobowy wspólny"],"correct":0},
+  {"q":"Mieszki językowe znajdują się w części języka","a":["bocznej","tylnej","przedniej","dolnej"],"correct":1},
+  {"q":"Pęcherzyk żółciowy nie składa się z","a":["szyjki","trzonu","dna","ramienia"],"correct":3},
+  {"q":"Przełyk lokalizuje się na wysokości kręgów","a":["IV szyjnego do X–XI piersiowego","V szyjnego do X–XI piersiowego","VI szyjnego do X–XI piersiowego","VII szyjnego do XII piersiowego"],"correct":2},
+  {"q":"Przewód wątrobowy wspólny powstaje z przewodu","a":["pęcherzykowego i żółciowego","wątrobowego prawego i lewego","żółciowego wspólnego i wątrobowego mniejszego","wątrobowego górnego i dolnego"],"correct":1},
+  {"q":"W dwunastnicy kolejno wyróżniamy części","a":["górną, zstępującą, dolną, wstępującą","zstępującą, górną, dolną, wstępującą","zstępującą, wstępującą, górną, dolną","dolną, zstępującą, wstępującą, górną"],"correct":0},
+  {"q":"Wyrostek robaczkowy odchodzi od","a":["okrężnicy wstępującej","okrężnicy poprzecznej","okrężnicy zstępującej","jelita ślepego"],"correct":3},
+  {"q":"Pole nagie znajduje się na powierzchni wątroby","a":["przedniej","bocznej","tylnej","przyśrodkowej"],"correct":2},
+  {"q":"Do wnęki wątroby nie wchodzi","a":["żyła wrotna","tętnica wątrobowa właściwa","splot nerwowy","przewód wątrobowy wspólny"],"correct":3},
+  {"q":"Przewód trzustkowy dodatkowy uchodzi do brodawki","a":["głównej","mniejszej","większej","bocznej"],"correct":1},
+  {"q":"Jak leży dwunastnica względem otrzewnej?","a":["opuszka wewnątrzotrzewnowo, reszta zewnątrzotrzewnowo","cała wewnątrzotrzewnowo","cała zewnątrzotrzewnowo","opuszka zewnątrzotrzewnowo, reszta wewnątrzotrzewnowo"],"correct":0},
+  {"q":"Jaka jest prawidłowa kolejność warstw policzka od zewnątrz?","a":["warstwa tłuszczowa (poduszeczka tłuszczowa), powięź policzkowo-gardłowa, m. policzkowy, gruczoły policzkowe, błona śluzowa","błona śluzowa, gruczoły policzkowe, m. policzkowy, powięź policzkowo-gardłowa, poduszeczka tłuszczowa","m. policzkowy, poduszeczka tłuszczowa, błona śluzowa, gruczoły policzkowe, powięź policzkowo-gardłowa","powięź policzkowo-gardłowa, błona śluzowa, m. policzkowy, gruczoły policzkowe, poduszeczka tłuszczowa"],"correct":0},
+  {"q":"Co unerwia smakowo nasadę języka (1/3 tylną błony śluzowej języka)?","a":["gałęzie językowe nerwu językowo-gardłowego (IX)","struna bębenkowa nerwu twarzowego (VII)","nerw podjęzykowy (XII)","nerw językowo-gardłowy (X)"],"correct":0},
+  {"q":"Z czym nie graniczy bezpośrednio powierzchnia trzewna wątroby?","a":["z przednią ścianą brzucha, sercem i prawym płucem (przylega do nich przez przeponę)","z nerką prawą i nadnerczem prawym","z zgięciem prawym okrężnicy","z żołądkiem i dwunastnicą"],"correct":0},
+  {"q":"Jaki jest przebieg żółci w drogach zewnątrzwątrobowych (od przewodu wątrobowego wspólnego)?","a":["przewód wątrobowy wspólny → pęcherzyk żółciowy → przewód pęcherzykowy → przewód żółciowy wspólny (odcinki: naddwunastniczy, zadwunastniczy, trzustkowy, śródścienny) → jelito","przewód wątrobowy wspólny → jelito → pęcherzyk żółciowy → przewód pęcherzykowy → przewód żółciowy wspólny","przewód żółciowy wspólny → przewód pęcherzykowy → pęcherzyk żółciowy → przewód wątrobowy wspólny","przewód pęcherzykowy → przewód wątrobowy wspólny → jelito → pęcherzyk żółciowy"],"correct":0},
+  {"q":"Jakie więzadła tworzą sieć mniejszą?","a":["wątrobowo-przełykowe, wątrobowo-żołądkowe oraz wątrobowo-dwunastnicze","żołądkowo-okrężnicze, żołądkowo-śledzionowe i przeponowo-przełykowe","sierpowate, obłe i trójkątne","wieńcowe, żylne i tętnicze"],"correct":0},
+  {"q":"Jak leży przełyk względem kręgosłupa i jaki ma zakres wysokości?","a":["do przodu od kręgosłupa i po lewo od niego; od wysokości chrząstki pierścieniowatej krtani (VI krąg szyjny C6) do Th11","do tyłu od kręgosłupa i po prawo od niego; od C1 do L1","do przodu od kręgosłupa i po prawo od niego; od C4 do Th8","bezpośrednio na linii pośrodkowej kręgosłupa; od C6 do L3"],"correct":0},
+  {"q":"Czym jest uchyłek Meckela?","a":["pozostałością po przewodzie żółtkowo-jelitowym w jelicie krętym u ok. 2% populacji","prawidłową strukturą w początkowym odcinku dwunastnicy","zachyłkiem otrzewnej w zatoce Douglasa","przewodem odprowadzającym sok trzustkowy z głowy trzustki"],"correct":0},
+  {"q":"Jakie położenie może przyjmować wyrostek robaczkowy?","a":["różne: może zwisać do prawego dołu biodrowego nad brzegiem miednicy mniejszej, biec zakątniczo do wnęki wątroby, mieć kreskę wyrostka (wewnątrzotrzewnowo), biec wzdłuż krezki jelita cienkiego lub leżeć wtórnie zewnątrzotrzewnowo","wyłącznie stałe w lewym dole biodrowym","wyłącznie pod przeponą po stronie lewej","zawsze zewnątrzotrzewnowo za dwunastnicą"],"correct":0},
+  {"q":"Które z wymienionych nie unaczynia bezpośrednio przełyku?","a":["tętnica krezkowa górna","tętnica tarczowa dolna (od t. podobojczykowej)","aorta piersiowa","tętnica żołądkowa lewa (od pnia trzewnego) oraz przeponowa lewa (od aorty brzusznej)"],"correct":0},
+  {"q":"Jakie są fizjologiczne zwężenia przełyku?","a":["górne (przy przejściu gardła w przełyk), środkowe (na wysokości lewego oskrzela głównego) i dolne (w rozworze przełykowym przepony)","tylko górne na wysokości C6 i dolne na wysokości L1","górne (w wpustowym odcinku żołądka) i dolne (na wysokości łuku aorty)","zwężenie szyjne, piersiowe i dwunastnicze"],"correct":0},
+  {"q":"Jakie zęby stałe wychodzą jako pierwsze u człowieka?","a":["siekacze przyśrodkowe","kły","przedtrzonowce drugie","trzonowce trzecie"],"correct":0},
+  {"q":"Czym jest migdałek trzeci?","a":["inaczej migdałek gardłowy lub migdałek adenoidalny","migdałek podniebienny","migdałek językowy","migdałek trąbkowy"],"correct":0},
+  {"q":"Skąd przewód trzustkowy dodatkowy drenuje sok?","a":["z głowy trzustki","z ogona trzustki","z pęcherzyka żółciowego","z dwunastnicy"],"correct":0},
+  {"q":"Gdzie znajduje się wcięcie kątowe żołądka?","a":["na krzywiźnie mniejszej, między trzonem a odźwiernikiem","na krzywiźnie większej, w okolicy dna żołądka","na wpustowej części żołądka, przy przełyku","na tylnej ścianie trzonu żołądka"],"correct":0},
+  {"q":"Jakie struktury krzyżuje trzon trzustki?","a":["aortę, tętnicę krezkową górną, lewą nerkę i lewe nadnercze","tylko żyłę główną dolną i prawą nerkę","łuk aorty i tchawicę","tylko pęcherzyk żółciowy i okrężnicę poprzeczną"],"correct":0},
+  {"q":"Na jakiej wysokości zaczyna się wpust żołądka?","a":["na wysokości Th11","na wysokości C6","na wysokości Th4","na wysokości L4"],"correct":0},
+  {"q":"Jaka jest długość między siekaczami przyśrodkowymi a wpustem żołądka?","a":["40 cm","15 cm","65 cm","25 cm"],"correct":0},
+  {"q":"Który płat wątroby jest największy?","a":["prawy","lewy","czworoboczny","ogoniasty"],"correct":0},
+  {"q":"Co unaczynia krzywiznę mniejszą żołądka?","a":["tętnica żołądkowa lewa (od pnia trzewnego) i tętnica żołądkowa prawa (od tętnicy wątrobowej właściwej)","tętnica krezkowa dolna i tętnica nerkowa lewa","tętnica biodrowa zewnętrzna i tętnica nadbrzuszna dolna","tętnica śledzionowa i tętnica wątrobowo-dwunastnicza"],"correct":0},
+  {"q":"Jaka jest budowa ściany przełyku?","a":["błona śluzowa z utkaniem podśluzowym, błona mięśniowa i błona zewnętrzna","tylko błona śluzowa i surowicza","błona śluzowa, warstwa chrzęstna i otrzewna trzewna","wyłącznie błona mięśniowa poprzecznie prążkowana"],"correct":0},
+  {"q":"Gdzie uchodzą brodawki dwunastnicze większa i mniejsza?","a":["obie uchodzą na części zstępującej dwunastnicy (L2–L3)","na części górnej dwunastnicy (Th12)","na części wstępującej dwunastnicy (L4)","w miejscu przejścia dwunastnicy w jelito czcze"],"correct":0},
+  {"q":"Co uchodzi do brodawki dwunastniczej większej?","a":["przewód żółciowy wspólny i przewód trzustkowy","tylko przewód trzustkowy dodatkowy","przewód wątrobowy prawy i lewy","wyłącznie przewód pęcherzykowy"],"correct":0},
+  {"q":"Gdzie kończą się kosmki jelitowe?","a":["na zastawce krętnico-kątniczej","w połowie dwunastnicy","w okrężnicy poprzecznej","w odbytnicy"],"correct":0},
+  {"q":"Co ogranicza cieśń gardzieli?","a":["języczek, łuki podniebienno-językowe i łuki podniebienno-gardłowe oraz nasada języka","podniebienie twarde, zęby sieczne i wargi","nagłośnia, chrząstka tarczowata i chrząstka pierścieniowata","migdałki trąbkowe i ujścia gardłowe trąbek słuchowych"],"correct":0},
+  {"q":"Jak unerwiona jest ślinianka przyuszna?","a":["przez zwój przyuszny od nerwu językowo-gardłowego (IX)","przez nerw podjęzykowy (XII)","przez nerw bloczkowy (IV)","przez nerw przeponowy"],"correct":0},
+  {"q":"Jak leży okrężnica względem otrzewnej?","a":["okrężnica wstępująca i zstępująca – zewnątrzotrzewnowo, a okrężnica poprzeczna i esowata – wewnątrzotrzewnowo","cała okrężnica leży zewnątrzotrzewnowo","cała okrężnica leży wewnątrzotrzewnowo","okrężnica poprzeczna – zewnątrzotrzewnowo, a wstępująca i zstępująca – wewnątrzotrzewnowo"],"correct":0},
+  {"q":"Co to jest więzadło sierpowate wątroby?","a":["więzadło leżące między przednią ścianą jamy brzusznej a powierzchnią przeponową wątroby","pozostałość po żyle pępkowej","więzadło łączące wątrobę z dwunastnicą","więzadło łączące żołądek ze śledzioną"],"correct":0},
+  {"q":"Więzadło obłe wątroby jest pozostałością po","a":["żyle pępkowej","przewodzie żółtkowo-jelitowym","tętnicy pępkowej","przewodzie żylnym"],"correct":0},
+  {"q":"Skąd pochodzi unaczynienie okrężnicy?","a":["2/3 prawe od tętnicy krezkowej górnej, a 1/3 lewa od tętnicy krezkowej dolnej","w całości od tętnicy krezkowej dolnej","w całości od pnia trzewnego","2/3 lewe od tętnicy krezkowej górnej, a 1/3 prawe od dolnej"],"correct":0},
+  {"q":"Ile jest migdałków i jakich?","a":["6: 2 podniebienne, 1 gardłowy, 2 trąbkowe i 1 językowy","4: 2 podniebienne, 1 gardłowy i 1 językowy","3: 1 gardłowy i 2 podniebienne","8: po 2 każdego rodzaju"],"correct":0},
+  {"q":"Co wchodzi w skład pierścienia Waldeyera?","a":["6 migdałków oraz ognisko utkania limfoidalnego krtani","wyłącznie 2 migdałki podniebienne i 1 gardłowy","wszystkie kępki Peyera jelita krętego","migdałki trąbkowe i węzły chłonne krezkowe"],"correct":0},
+  {"q":"Jak unerwione są brodawki języka?","a":["brodawki okolone – n. językowo-gardłowy (IX); liściaste i grzybowate – n. twarzowy (VII, struna bębenkowa); nitkowate i stożkowate – 3. gałąź n. trójdzielnego (n. podżuchwowy drogą n. językowego)","wszystkie brodawki wyłącznie przez nerw podjęzykowy (XII)","brodawki okolone przez n. twarzowy (VII), a liściaste przez n. błędny (X)","wszystkie brodawki wyłącznie przez n. językowo-gardłowy (IX)"],"correct":0},
+  {"q":"Jakie są zgięcia okrężnicy?","a":["lewe zgięcie okrężnicy (śledzionowe) oraz prawe zgięcie okrężnicy (wątrobowe)","górne zgięcie okrężnicy i dolne zgięcie okrężnicy","przednie zgięcie okrężnicy i tylne zgięcie okrężnicy","zgięcie esicze i zgięcie kątnicze"],"correct":0},
+  {"q":"Co jest największym zachyłkiem otrzewnej?","a":["torba sieciowa","jama Douglasa","zachylek wątrobowo-nerkowy","zachylek dwunastniczo-jelitowy"],"correct":0},
+  {"q":"Dlaczego jama Douglasa (zagłębienie odbytniczo-maciczne) jest ważnym punktem klinicznym?","a":["może zbierać się tam płyn, który nie powinien tam być","ponieważ znajduje się tam pęcherzyk żółciowy","ponieważ przechodzi przez nią przewód trzustkowy","ponieważ stanowi barierę dla krążenia obocznego"],"correct":0},
+  {"q":"Czym pokryta jest sieć większa?","a":["jest bogato otłuszczona","jest całkowicie pozbawiona tkanki tłuszczowej","jest pokryta chrząstką szklistą","jest wyścielona nabłonkiem wielowarstwowym płaskim rogowaciejącym"],"correct":0},
+  {"q":"Czym jest hepatomegalia, a czym hepatosplenomegalia?","a":["hepatomegalia – powiększenie wątroby; hepatosplenomegalia – powiększenie wątroby i śledziony","hepatomegalia – powiększenie śledziony; hepatosplenomegalia – powiększenie trzustki i wątroby","hepatomegalia – zanik wątroby; hepatosplenomegalia – zapalenie pęcherzyka żółciowego","hepatomegalia – powiększenie wątroby i nerek; hepatosplenomegalia – powiększenie śledziony"],"correct":0},
+  {"q":"Jakie są cechy charakterystyczne dla jelita grubego?","a":["fałdy półksiężycowate, taśmy (swobodna, sieciowa i krezkowa) oraz przyczepki sieciowe","kosmki jelitowe i brak taśm mięśniowych","obecność uchyłka Meckela na całej długości","brak błony podśluzowej i brak taśm"],"correct":0},
+  {"q":"Gdzie chirurg może znaleźć wyrostek robaczkowy?","a":["u zbiegu taśm: swobodnej, sieciowej i krezkowej","w miejscu połączenia przełyku z żołądkiem","w okolicy wnęki śledziony","w zagłębieniu podprzeponowym lewym"],"correct":0},
+  {"q":"Co krzyżuje krezka jelita cienkiego?","a":["u kobiety prawy jajowód, u mężczyzny prawy nasieniowód, a po prawej również moczowód","tylko lewy moczowód i lewą nerkę","pień trzewny i żyłę wrotną","żyłę główną górną i tchawicę"],"correct":0},
+  {"q":"Co umożliwia krążenie oboczne w obrębie jelita cienkiego?","a":["położone między blaszkami otrzewnej w jelicie cienkim naczynia i nerwy układające się w arkady","bezpośrednie połączenia tętniczo-żylne w ścianie żołądka","przewód wątrobowy wspólny","żyła pępkowa"],"correct":0},
+  {"q":"Czym jest więzadło Treitza?","a":["umowną granicą między odcinkiem górnym a dolnym przewodu pokarmowego","więzadłem łączącym wątrobę z przeponą","pozostałością po przewodzie żółtkowo-jelitowym","częścią sieci większej"],"correct":0},
+  {"q":"Jakie są charakterystyczne klinicznie miejsca dwunastnicy?","a":["brodawka dwunastnicza mniejsza (najczęstsze miejsce wrzodów dwunastnicy) i brodawka dwunastnicza większa","wpust dwunastnicy i odźwiernik dwunastniczy","wyrostek robaczkowy i kępki Peyera","cieśń dwunastnicy i zagłębienie odbytniczo-maciczne"],"correct":0},
+  {"q":"Ile płatów ma wątroba i który jest największy?","a":["4 płaty (prawy jest największy)","2 płaty (lewy jest największy)","3 płaty (wszystkie równej wielkości)","5 płatów (największy jest płat ogoniasty)"],"correct":0}
 ];
 
 const $ = id => document.getElementById(id);
